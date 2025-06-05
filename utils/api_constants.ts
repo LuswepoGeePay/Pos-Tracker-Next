@@ -1,4 +1,4 @@
-export const base_url = "http://localhost:8050";
+export const base_url = "http://localhost:8050/v1";
 export const domain_name = "testhof.crabdance.com"
 export const metaDataUrl ="https://testhof.crabdance.com";
 
@@ -11,31 +11,30 @@ export const api_endpoints = {
 
 
     //create
-    createUser: `${base_url}/create-user`,
-    createTeamMember: `${base_url}/create-member`,
-    createSeries: `${base_url}/create-series`,
+    createAppVersion: `${base_url}/app/version/register`,
+    createPosDevice: `${base_url}/create-series`,
     createDepartment: `${base_url}/create-department`,
     createSermon: `${base_url}/create-sermon`,
     createEvent: `${base_url}/create-event`,
     createTestimony: `${base_url}/create-testimony`,
     createMessage: `${base_url}/create-message`,
     createPodcast: `${base_url}/create-podcast`,
-    createBranch: `${base_url}/create-branch`,
+    createApp: `${base_url}/app/register`,
     createZone: `${base_url}/create-zone`,
     createLive: `${base_url}/create-stream`,
 
     //Get
-    getTeam: `${base_url}/team-members`,
-    getSermons: `${base_url}/get-sermons`,
-    getSermon: `${base_url}/get-sermon`,
+    getAppVersions: `${base_url}/app/versions/get`,
+    getPosDevices: `${base_url}/pos/devices/get`,
+    getLocations: `${base_url}/locations/get`,
     getPodcasts: `${base_url}/get-podcasts`,
     getPodcast: `${base_url}/get-podcast`,
     getSeries: `${base_url}/get-series`,
     getEvents: `${base_url}/get-events`,
     getDepartments: `${base_url}/get-departments`,
-    getBranches: `${base_url}/get-branches`,
+    getApps: `${base_url}/apps/get`,
     getZones: `${base_url}/get-zones`,
-    getBranch: `${base_url}/get-branch`,
+    getApp: `${base_url}/get-App`,
     getUsers: `${base_url}/get-users`,
     getDepartment: `${base_url}/get-department`,
     getEvent: `${base_url}/get-event`,
@@ -58,7 +57,7 @@ export const api_endpoints = {
     editEvent: `${base_url}/edit-event`,
     updateTestimony: `${base_url}/update-testimony`,
     editPodcast: `${base_url}/edit-podcast`,
-    editBranch: `${base_url}/edit-branch`,
+    editApp: `${base_url}/edit-App`,
     editZone: `${base_url}/edit-zone`,
     editLive:`${base_url}/edit-stream`,
     editDiary:`${base_url}/edit-diary`,
@@ -73,9 +72,9 @@ export const api_endpoints = {
     deleteEvent: `${base_url}/delete-event`,
     deleteMessage: `${base_url}/delete-message`,
     deleteTestimony: `${base_url}/delete-testimony`,
-    deleteBranch: `${base_url}/delete-branch`,
+    deleteApp: `${base_url}/delete-App`,
     deleteZone: `${base_url}/delete-zone`,
-    deletePodcast: `${base_url}/delete-podcast`,
-    deleteLive:`${base_url}/delete-stream`,
-    deleteDiary:`${base_url}/delete-diary`,
+    deleteLocation: `${base_url}/delete-podcast`,
+    deleteAppVersion:`${base_url}/delete-stream`,
+    deletePosDevice:`${base_url}/delete-diary`,
 };

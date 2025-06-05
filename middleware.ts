@@ -14,7 +14,8 @@ export default withAuth(
     }
 
     // Example: Role-based access control
-    if (pathname.startsWith("/admin") && token?.role !== "Admin") {
+    if (pathname.startsWith("/admin") && token?.role !== "admin") {
+   
       const unauthorizedUrl = new URL("/403", req.url);
       return NextResponse.redirect(unauthorizedUrl);
     }
