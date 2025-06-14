@@ -68,16 +68,16 @@ const StatusCell = ({ row }: { row: Row<PosDevice> }) => {
 
 
 
-const DescriptionCell = ({ row }: { row: Row<PosDevice> }) => {
-    const description = row.original
-    return (
-        <>
-            <div className="max-h-[100px] overflow-hidden text-ellipsis">
-                <p className="line-clamp-3">{description.description}</p>
-            </div>
-        </>
-    )
-}
+// const DescriptionCell = ({ row }: { row: Row<PosDevice> }) => {
+//     const description = row.original
+//     return (
+//         <>
+//             <div className="max-h-[100px] overflow-hidden text-ellipsis">
+//                 <p className="line-clamp-3">{description.description}</p>
+//             </div>
+//         </>
+//     )
+// }
 
 export const PosDeviceColumns = (
     setViewUser: (PosDevice: PosDevice | null) => void,

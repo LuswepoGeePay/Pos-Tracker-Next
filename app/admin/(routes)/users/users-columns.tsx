@@ -5,8 +5,6 @@ import { DropdownMenuContent, DropdownMenu, DropdownMenuTrigger, DropdownMenuLab
 import { User } from "@/utils/types/User"
 import { ColumnDef, Row } from "@tanstack/react-table"
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
-import { useRouter } from "next/navigation"
-
 
 type UserActionsProps = {
     row: User;

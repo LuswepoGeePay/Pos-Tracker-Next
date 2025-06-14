@@ -13,7 +13,6 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from '@/components/ui/input'
-import { useRouter } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
 import { api_endpoints } from '@/utils/api_constants'
@@ -45,7 +44,6 @@ interface EditPosDeviceFormProps {
 
 const EditPosDeviceForm: React.FC<EditPosDeviceFormProps> = ({ pos }) => {
    
-    const router = useRouter()
     const [loading, setLoading] = useState(false)
     const { data: session } = useSession()
 

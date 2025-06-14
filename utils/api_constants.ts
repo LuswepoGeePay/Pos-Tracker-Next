@@ -14,7 +14,7 @@ export const api_endpoints = {
     //create
     createAppVersion: `${base_url}/app/version/register`,
     createUser: `${login_url}/create-user`,
-    createDepartment: `${base_url}/create-department`,
+    createPosDevice: `${base_url}/create-department`,
     createSermon: `${base_url}/create-sermon`,
     createEvent: `${base_url}/create-event`,
     createTestimony: `${base_url}/create-testimony`,

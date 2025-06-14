@@ -1,6 +1,5 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { base_url } from "@/utils/api_constants";
 import { PosDevice } from "@/utils/types/PosDevices";
 
 interface ViewDeviceDialogProps {

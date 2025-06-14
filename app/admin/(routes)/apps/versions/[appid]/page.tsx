@@ -3,7 +3,7 @@ import CreateAppVersionForm from '@/components/custom/forms/appvs/create-version
 import { useParams } from 'next/navigation'
 import React from 'react'
 
-const page = () => {
+const AddVersionPage = () => {
     const {appid} = useParams()
 
 
@@ -14,4 +14,4 @@ const page = () => {
   )
 }
 
-export default page
+export default AddVersionPage

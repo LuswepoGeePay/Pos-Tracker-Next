@@ -9,12 +9,12 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import toast from 'react-hot-toast'
 import { api_endpoints } from '@/utils/api_constants'
-// import ViewUserDialog from '@/components/custom/dialogs/users/view-user-dialog'
-// import EditUserDialog from '@/components/custom/dialogs/users/edit-user-dialog'
-import { format } from 'date-fns'
+
 import { User } from '@/utils/types/User'
 import { UserDataTable } from '@/app/admin/(routes)/users/users-data-table'
 import { UserColumns } from '@/app/admin/(routes)/users/users-columns'
+import ViewUserDialog from '../dialogs/users/view-user-dialog'
+import EditUserDialog from '../dialogs/users/edit-user-dialog'
 
 
 const DashboardUsers = () => {
@@ -162,16 +162,16 @@ useEffect(() => {
             </Button>
           </div>
 
-          {/* <ViewUserDialog
+          <ViewUserDialog
             user={viewUser}
             open={!!viewUser}
             onClose={() => setViewUser(null)}
           />
           <EditUserDialog
-            User={editUser}
+            user={editUser}
             open={!!editUser}
             onClose={() => setEditUser(null)}
-          /> */}
+          />
 
           <Dialog open={!!deleteUser} onOpenChange={(open) => !open && setDeleteUser(null)}>
             <DialogContent className='w-[350px] md:w-[800px] rounded-lg'>

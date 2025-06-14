@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { DropdownMenuContent, DropdownMenu, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { LHistory } from "@/utils/types/PosDevices"
-import { ColumnDef, Row } from "@tanstack/react-table"
+import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
 import { useRouter } from "next/navigation"
 
@@ -57,16 +57,16 @@ const UserActions: React.FC<UserActionsProps> = ({ row, onView, onEdit, onDelete
 
 
 
-const DescriptionCell = ({ row }: { row: Row<LHistory> }) => {
-    const description = row.original
-    return (
-        <>
-            <div className="max-h-[100px] overflow-hidden text-ellipsis">
-                {/* <p className="line-clamp-3">{description.release_notes}</p> */}
-            </div>
-        </>
-    )
-}
+// const DescriptionCell = ({ row }: { row: Row<LHistory> }) => {
+//     const description = row.original
+//     return (
+//         <>
+//             <div className="max-h-[100px] overflow-hidden text-ellipsis">
+//                 {/* <p className="line-clamp-3">{description.release_notes}</p> */}
+//             </div>
+//         </>
+//     )
+// }
 
 export const LocationColumns = (
     setViewUser: (LHistory: LHistory | null) => void,

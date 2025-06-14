@@ -13,7 +13,6 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from '@/components/ui/input'
-import { useRouter } from 'next/navigation'
 import { Loader2, Upload } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
 import { api_endpoints } from '@/utils/api_constants'
@@ -42,7 +41,6 @@ interface EditAppVersionFormProps {
 
 
 const EditAppVersionForm: React.FC<EditAppVersionFormProps> = ({ version }) => {
-    const router = useRouter()
     const [loading, setLoading] = useState(false)
     const { data: session } = useSession()
 

@@ -1,6 +1,5 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { base_url } from "@/utils/api_constants";
 import { User } from "@/utils/types/User";
 
 interface ViewUserDialogProps {

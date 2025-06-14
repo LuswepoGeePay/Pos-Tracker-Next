@@ -13,7 +13,6 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from '@/components/ui/input'
-import { useRouter } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
 // import toast from 'react-hot-toast'
 import { Separator } from '@/components/ui/separator'
@@ -30,7 +29,6 @@ const CreateAppSchema = z.object({
 
 
 const CreateAppForm = () => {
-    const router = useRouter()
     const [loading, setLoading] = useState(false)
     const { data: session } = useSession()
 
