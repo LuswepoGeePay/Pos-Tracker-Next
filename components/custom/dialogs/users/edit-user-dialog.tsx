@@ -1,26 +1,26 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { AppVersion } from "@/utils/types/Apps";
-import EditAppVersionForm from "../../forms/appvs/edit-version-form";
+import EditUserForm from "../../forms/users/edit-user-form";
+import { User } from "@/utils/types/User";
 
 
-interface EditAppVersionDialogProps {
-  appVersion: AppVersion | null;
+interface EditUserDialogProps {
+  user: User | null;
   open: boolean;
   onClose: () => void;
 }
 
-const EditAppVersionDialog: React.FC<EditAppVersionDialogProps> = ({ appVersion, open, onClose }) => {
-  if (!appVersion) return null;
+const EditUserDialog: React.FC<EditUserDialogProps> = ({ user, open, onClose }) => {
+  if (!user) return null;
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="px-16  md:min-w-[800px]">
         <DialogHeader className="hidden">
-          <DialogTitle>AppVersion Details</DialogTitle>
+          <DialogTitle>User Details</DialogTitle>
         </DialogHeader>
         <div>
-       <EditAppVersionForm version={appVersion}/>
+        <EditUserForm user={user}/> 
           </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Close</Button>
@@ -30,4 +30,4 @@ const EditAppVersionDialog: React.FC<EditAppVersionDialogProps> = ({ appVersion,
   )
 }
 
-export default EditAppVersionDialog;
+export default EditUserDialog;

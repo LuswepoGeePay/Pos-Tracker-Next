@@ -12,7 +12,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { ChevronDown, ChevronUp,  Code,  LucideLayoutDashboard, MapPin, MapPinCheckInside, MessageCircle, Phone, Shapes, Smartphone, SquarePen, Tv, TvMinimalPlay,User2, Users, Users2 } from "lucide-react"
+import { ChevronDown, ChevronUp,  Code,  LucideLayoutDashboard, MapPin, MapPinCheckInside, MessageCircle, Phone, Settings, Shapes, Smartphone, SquarePen, Tv, TvMinimalPlay,User2, Users, Users2 } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./dropdown-menu"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./collapsible"
 import { signOut } from "next-auth/react"
@@ -24,13 +24,8 @@ const items = [
     url: "/admin/dashboard",
     icon: LucideLayoutDashboard,
   },
-  {
-    title: "User Management",
-    url: "/admin/users",
-    icon: Users,
-  },
+ 
   
-
 ]
 
 
@@ -64,6 +59,20 @@ const messages = [
   },
 ]
 
+
+const users = [
+   {
+    title: "User Management",
+    url: "/admin/users",
+    icon: Users,
+  },
+   {
+    title: "Settings",
+    url:  "/admin/settings" ,
+    icon: Settings,
+  },
+
+]
 
 export function AppSidebar() {
 
@@ -145,6 +154,32 @@ export function AppSidebar() {
             </CollapsibleContent>
           </SidebarGroup>
         </Collapsible>
+        <Collapsible defaultOpen className="group/collapsible">
+          <SidebarGroup>
+            <SidebarGroupLabel asChild>
+              <CollapsibleTrigger>
+                User Management
+                <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
+              </CollapsibleTrigger>
+            </SidebarGroupLabel>
+            <CollapsibleContent>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {users.map((item) => (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton asChild>
+                        <a href={item.url}>
+                          <item.icon />
+                          <span>{item.title}</span>
+                        </a>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </CollapsibleContent>
+          </SidebarGroup>
+        </Collapsible>
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
@@ -166,6 +201,7 @@ export function AppSidebar() {
                 >
                   <span>Sign out</span>
                 </DropdownMenuItem>
+              
               </DropdownMenuContent>
             </DropdownMenu>
           </SidebarMenuItem>

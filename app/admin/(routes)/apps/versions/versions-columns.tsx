@@ -21,12 +21,7 @@ type UserActionsProps = {
 
 const UserActions: React.FC<UserActionsProps> = ({ row, onView, onEdit, onDelete }) => {
 
-    const appID = row.version_id;
-      const router = useRouter()
-    
-      const handleAddApk = () => {
-        router.push(`/admin/apps/versions/${appID}`)
-      }
+
     
     return (
         <>
@@ -40,7 +35,6 @@ const UserActions: React.FC<UserActionsProps> = ({ row, onView, onEdit, onDelete
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleAddApk}>Add apk</DropdownMenuItem>
 
                     <DropdownMenuItem onClick={() => onView(row)}>View</DropdownMenuItem>
                     <DropdownMenuItem onClick={() => onEdit(row)}>Edit</DropdownMenuItem>
@@ -68,6 +62,31 @@ const DescriptionCell = ({ row }: { row: Row<AppVersion> }) => {
     )
 }
 
+const StableCell = ({ row }: { row: Row<AppVersion> }) => {
+    const latest = row.original
+    return (
+        <>
+            <div className={latest.is_latest_stable ?`bg-green-500 text-white rounded-2xl`: `bg-red-500 text-white rounded-2xl`}>
+                <p className="">{latest.is_latest_stable ? "Yes" :"No"}</p>
+            </div>
+        </>
+    )
+}
+
+
+
+const ActiveCell = ({ row }: { row: Row<AppVersion> }) => {
+    const active = row.original
+    return (
+        <>
+            <div className={active.is_active ?`bg-green-500 text-white rounded-2xl `: ` bg-red-500 text-white rounded-2xl`}>
+                <p className="">{active.is_active ? "Yes" :"No"}</p>
+            </div>
+        </>
+    )
+}
+
+
 export const VersionColumns = (
     setViewUser: (AppVersion: AppVersion | null) => void,
     setEditUser: (AppVersion: AppVersion | null) => void,
@@ -92,10 +111,6 @@ export const VersionColumns = (
             accessorKey: "version_number",
               header: "Version Number",
         },
-         {
-            accessorKey: "build_number",
-              header: "Build Number",
-        },
         {
             accessorKey: "release_notes",
             header: "Release Notes",
@@ -104,23 +119,20 @@ export const VersionColumns = (
         
          {
             accessorKey: "is_latest_stable",
-              header: "Is Latest",
+              header: "Latest",
+              cell:StableCell
+        },
+           {
+            accessorKey: "is_active",
+              header: "Active",
+              cell:ActiveCell
         },
         {
             accessorKey: "released_at",
             header: "Date Created"
-        },
-         {
-            accessorKey: "checksum",
-              header: "Check-Sum",
-        },
-         {
-            accessorKey: "file_path",
-              header: "File Path",
-        },
-
         
-
+        },
+    
         {
             id: "Actions",
             header: "Actions",

@@ -167,7 +167,7 @@ useEffect(() => {
             onClose={() => setViewApp(null)}
           />
           <EditAppDialog
-            App={editApp}
+            app={editApp}
             open={!!editApp}
             onClose={() => setEditApp(null)}
           />

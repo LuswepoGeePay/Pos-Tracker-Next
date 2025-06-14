@@ -21,61 +21,65 @@ import toast from 'react-hot-toast'
 import { useSession } from 'next-auth/react'
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { AppVersion } from '@/utils/types/Apps'
 
-const CreateAppVersionSchema = z.object({
-    name: z.string(),
-    description: z.string(),
-    versionNumber: z.string().min(1, { message: "Version Number is required" }),
-    buildNumber: z.string().min(1, { message: "Build Number is required" }),
-    releaseNotes: z.string().min(1, { message: "Release notes is required" }),
-    fileSize: z.string().min(1, { message: "File Size in Bytes" }),
-    isLastestStable: z.boolean(),
+const EditAppVersionSchema = z.object({
+    app_id: z.string().optional(),
+    versionNumber: z.string().optional().optional(),
+    version_id: z.string().optional(),
+    releaseNotes: z.string().optional(),
+    is_active: z.boolean().optional(),
+    is_latest_stable: z.boolean().optional(),
     apk: z.instanceof(File).optional().refine((file) => {
         return !file || (file && file.size <= 200 * 1024 * 1024);
     }, "File must be under 200mb"),
 })
 
-const CreateAppVersionForm = ({ appid }: { appid: string }) => {
+interface EditAppVersionFormProps {
+    version: AppVersion | null;
+
+}
+
+
+const EditAppVersionForm: React.FC<EditAppVersionFormProps> = ({ version }) => {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
     const { data: session } = useSession()
 
-    const form = useForm<z.infer<typeof CreateAppVersionSchema>>({
-        resolver: zodResolver(CreateAppVersionSchema),
+    const form = useForm<z.infer<typeof EditAppVersionSchema>>({
+        resolver: zodResolver(EditAppVersionSchema),
         defaultValues: {
-            name: "",
-            description: "",
-            versionNumber: "",
-            buildNumber: "",
-            releaseNotes: "",
-            fileSize: "",
-            isLastestStable: false, // Default to false
+            app_id: version?.app_id,
+            versionNumber: version?.version_number,
+            version_id: version?.version_id,
+            releaseNotes: version?.release_notes,
+            is_active: version?.is_active,
+            is_latest_stable: version?.is_latest_stable, // Default to false
         },
     })
 
-    const onSubmit = async (values: z.infer<typeof CreateAppVersionSchema>) => {
+    const onSubmit = async (values: z.infer<typeof EditAppVersionSchema>) => {
         try {
             setLoading(true)
 
             const formData = new FormData()
 
             const appData = {
-                app_id: appid,
                 version_number: values.versionNumber,
-                build_number: values.buildNumber,
                 release_notes: values.releaseNotes,
-                file_size_bytes: values.fileSize,
-                is_latest_stable: values.isLastestStable,
+                is_latest_stable: values.is_latest_stable,
+                version_id:values.version_id,
+                is_active:values.is_active
             }
 
             formData.append("version", JSON.stringify(appData))
-            formData.append("name", values.name)
+         
 
             if (values.apk) {
                 formData.append("file", values.apk)
             }
 
-            const response = await fetch(api_endpoints.createAppVersion, {
+            const response = await fetch(api_endpoints.editAppVersion, {
                 method: 'POST',
                 headers: {
                     // Remove 'Content-Type': FormData sets it automatically
@@ -87,13 +91,13 @@ const CreateAppVersionForm = ({ appid }: { appid: string }) => {
             const result = await response.json()
 
             if (result.status === 'success') {
-                toast.success("App Version successfully created!")
-                router.push("/admin/apps/versions")
-                router.refresh() // Prefer router.refresh() over window.location.reload() for Next.js
+                toast.success("App Version successfully updated!")
+               window.location.reload()
             } else if (result.status === "failure") {
+                   console.log('error', result.error)
                 toast.error(result.error)
             } else {
-                toast.error("Failed to create app version")
+                toast.error("Failed to update app version")
             }
         } catch (error) {
             console.log('error', error)
@@ -104,10 +108,10 @@ const CreateAppVersionForm = ({ appid }: { appid: string }) => {
     }
 
     return (
-        <div className="shadow-xl border p-10 rounded-2xl">
+        <div className="">
             <div className="mb-10">
-                <p className="text-2xl font-bold">Add an app version</p>
-                <p className="text-sm mb-1">Add an app version for easy Identification and filtering</p>
+                <p className="text-2xl font-bold">Edit an app version</p>
+                {/* <p className="text-sm mb-1">Add an app version for easy Identification and filtering</p> */}
                 <Separator />
             </div>
             <Form {...form}>
@@ -115,19 +119,9 @@ const CreateAppVersionForm = ({ appid }: { appid: string }) => {
                     onSubmit={form.handleSubmit(onSubmit)}
                     className="grid grid-cols-1 md:grid-cols-2 gap-3"
                 >
-                    <FormField
-                        control={form.control}
-                        name="name"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Name</FormLabel>
-                                <FormControl>
-                                    <Input type="text" placeholder="" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+
+                    <p>Version ID {version?.version_id}</p>
+
                     <FormField
                         control={form.control}
                         name="versionNumber"
@@ -141,38 +135,13 @@ const CreateAppVersionForm = ({ appid }: { appid: string }) => {
                             </FormItem>
                         )}
                     />
-                    <FormField
-                        control={form.control}
-                        name="buildNumber"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Build Number</FormLabel>
-                                <FormControl>
-                                    <Input type="text" placeholder="" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                    
                     <FormField
                         control={form.control}
                         name="releaseNotes"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Release Notes</FormLabel>
-                                <FormControl>
-                                    <Input type="text" placeholder="" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="fileSize"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>File Size</FormLabel>
                                 <FormControl>
                                     <Input type="text" placeholder="" {...field} />
                                 </FormControl>
@@ -219,10 +188,37 @@ const CreateAppVersionForm = ({ appid }: { appid: string }) => {
                     />
                     <FormField
                         control={form.control}
-                        name="isLastestStable"
+                        name="is_active"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Is Latest Stable Release</FormLabel>
+                                <FormLabel>Active</FormLabel>
+                                <FormControl>
+                                    <RadioGroup
+                                        onValueChange={(value) => field.onChange(value === "true")} // Convert string to boolean
+                                        value={field.value ? "true" : "false"} // Bind boolean to string for RadioGroup
+                                        className="flex flex-col space-y-1"
+                                    >
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem value="true" id="true" />
+                                            <Label htmlFor="true">True</Label>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem value="false" id="false" />
+                                            <Label htmlFor="false">False</Label>
+                                        </div>
+                                    </RadioGroup>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    
+                    <FormField
+                        control={form.control}
+                        name="is_latest_stable"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Latest Stable Release</FormLabel>
                                 <FormControl>
                                     <RadioGroup
                                         onValueChange={(value) => field.onChange(value === "true")} // Convert string to boolean
@@ -246,14 +242,15 @@ const CreateAppVersionForm = ({ appid }: { appid: string }) => {
                     <Button
                         type="submit"
                         disabled={loading}
+                        className='col-start-1 row-start-4'
                     >
                         {loading ? (
                             <>
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                Uploading app...
+                                Updating app...
                             </>
                         ) : (
-                            "Create AppVersion"
+                            "Edit app version"
                         )}
                     </Button>
                 </form>
@@ -262,4 +259,4 @@ const CreateAppVersionForm = ({ appid }: { appid: string }) => {
     )
 }
 
-export default CreateAppVersionForm
+export default EditAppVersionForm

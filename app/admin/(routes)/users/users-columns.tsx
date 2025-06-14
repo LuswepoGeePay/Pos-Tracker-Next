@@ -2,31 +2,24 @@
 
 import { Button } from "@/components/ui/button"
 import { DropdownMenuContent, DropdownMenu, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "@/components/ui/dropdown-menu"
-import {  AppVersion } from "@/utils/types/Apps"
+import { User } from "@/utils/types/User"
 import { ColumnDef, Row } from "@tanstack/react-table"
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 
-
 type UserActionsProps = {
-    row: AppVersion;
-    onView: (AppVersion: AppVersion) => void;
-    onEdit: (AppVersion: AppVersion) => void;
-    onDelete: (AppVersion: AppVersion) => void;
+    row: User;
+    onView: (User: User) => void;
+    onEdit: (User: User) => void;
+    onDelete: (User: User) => void;
   
 };
 
 
-
 const UserActions: React.FC<UserActionsProps> = ({ row, onView, onEdit, onDelete }) => {
 
-    const appID = row.version_id;
-      const router = useRouter()
     
-      const handleAddApk = () => {
-        router.push(`/admin/apps/versions/${appID}`)
-      }
     
     return (
         <>
@@ -40,7 +33,6 @@ const UserActions: React.FC<UserActionsProps> = ({ row, onView, onEdit, onDelete
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleAddApk}>Add apk</DropdownMenuItem>
 
                     <DropdownMenuItem onClick={() => onView(row)}>View</DropdownMenuItem>
                     <DropdownMenuItem onClick={() => onEdit(row)}>Edit</DropdownMenuItem>
@@ -57,68 +49,68 @@ const UserActions: React.FC<UserActionsProps> = ({ row, onView, onEdit, onDelete
 
 
 
-const DescriptionCell = ({ row }: { row: Row<AppVersion> }) => {
-    const description = row.original
+const StatusCell = ({ row }: { row: Row<User> }) => {
+      const isActive = row.original.status === true;
     return (
-        <>
-            <div className="max-h-[100px] overflow-hidden text-ellipsis">
-                <p className="line-clamp-3">{description.release_notes}</p>
-            </div>
-        </>
+       <div className={`p-1 w-full max-w-lg rounded-2xl text-white ${isActive ? "bg-green-500" : "bg-red-500"}`}>
+      {isActive ? <p>Active</p> : <p>Inactive</p>}
+    </div>
     )
 }
 
+
+const RoleCell = ({ row }: { row: Row<User> }) => {
+      const role = row.original
+    return (
+     <>
+     <p className="capitalize">{role.role}</p>
+     </>
+    )
+}
+
+
 export const UserColumns = (
-    setViewUser: (AppVersion: AppVersion | null) => void,
-    setEditUser: (AppVersion: AppVersion | null) => void,
-    onDelete: (AppVersion: AppVersion) => void,
+    setViewUser: (User: User | null) => void,
+    setEditUser: (User: User | null) => void,
+    onDelete: (User: User) => void,
   
-): ColumnDef<AppVersion>[] => [
+): ColumnDef<User>[] => [
+      {
+            accessorKey: "id",
+            header: "Id",
+            
+        },
         {
-            accessorKey: "name",
+            accessorKey: "fullname",
             header: ({ column }) => {
                 return (
                     <Button
                         variant="ghost"
                         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                     >
-                      App Name
+                      Full Name
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 )
             },
         },
          {
-            accessorKey: "version_number",
-              header: "Version Number",
+            accessorKey: "email",
+              header: "Email",
         },
          {
-            accessorKey: "build_number",
-              header: "Build Number",
+            accessorKey: "role",
+              header: "Role",
+              cell:RoleCell
         },
-        {
-            accessorKey: "release_notes",
-            header: "Release Notes",
-              cell: DescriptionCell
-        },
+      
         
          {
-            accessorKey: "is_latest_stable",
-              header: "Is Latest",
+            accessorKey: "status",
+              header: "Account Status",
+              cell:StatusCell
         },
-        {
-            accessorKey: "released_at",
-            header: "Date Created"
-        },
-         {
-            accessorKey: "checksum",
-              header: "Check-Sum",
-        },
-         {
-            accessorKey: "file_path",
-              header: "File Path",
-        },
-
+        
         
 
         {

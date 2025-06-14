@@ -22,7 +22,6 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
-import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -70,7 +69,7 @@ export function VersionDataTable<TData, TValue>({
                     className="max-w-sm dark:bg-[#0d1b2a] dark:border-gray-600"
                 />
             </div>
-            
+
             {/* Mobile view (card-like layout) */}
             <div className="block sm:hidden">
                 <div className="space-y-4">
@@ -99,8 +98,8 @@ export function VersionDataTable<TData, TValue>({
 
                                     // For other columns, show the label and value
                                     const header = cell.column.columnDef.header;
-                                    const headerContent = typeof header === 'string' 
-                                        ? header 
+                                    const headerContent = typeof header === 'string'
+                                        ? header
                                         : cell.column.id.charAt(0).toUpperCase() + cell.column.id.slice(1);
 
                                     return (
@@ -123,7 +122,7 @@ export function VersionDataTable<TData, TValue>({
             </div>
 
             {/* Desktop view (traditional table) */}
-            <div className="hidden sm:block">
+            {/* <div className="hidden sm:block">
                 <div className="rounded-md border dark:border-gray-600">
                     <ScrollArea className="w-full">
                         <Table>
@@ -165,7 +164,51 @@ export function VersionDataTable<TData, TValue>({
                         </Table>
                     </ScrollArea>
                 </div>
+            </div> */}
+            <div className="hidden sm:block">
+                <div className="overflow-x-auto w-full">
+                    <div className="min-w-[1000px] rounded-md border dark:border-gray-600">
+                        <Table>
+                            <TableHeader>
+                                {table.getHeaderGroups().map((headerGroup) => (
+                                    <TableRow key={headerGroup.id}>
+                                        {headerGroup.headers.map((header) => (
+                                            <TableHead key={header.id} className="text-center whitespace-nowrap">
+                                                {header.isPlaceholder
+                                                    ? null
+                                                    : flexRender(
+                                                        header.column.columnDef.header,
+                                                        header.getContext()
+                                                    )}
+                                            </TableHead>
+                                        ))}
+                                    </TableRow>
+                                ))}
+                            </TableHeader>
+                            <TableBody>
+                                {table.getRowModel().rows?.length ? (
+                                    table.getRowModel().rows.map((row) => (
+                                        <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                                            {row.getVisibleCells().map((cell) => (
+                                                <TableCell key={cell.id} className="text-center whitespace-nowrap">
+                                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                </TableCell>
+                                            ))}
+                                        </TableRow>
+                                    ))
+                                ) : (
+                                    <TableRow>
+                                        <TableCell colSpan={columns.length} className="h-24 text-center">
+                                            No results.
+                                        </TableCell>
+                                    </TableRow>
+                                )}
+                            </TableBody>
+                        </Table>
+                    </div>
+                </div>
             </div>
+
         </div>
     );
 }

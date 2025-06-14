@@ -12,6 +12,7 @@ export type PosDevice = {
     id: string;
     location_last_updated:string;
     description:string;
+    business_name:string;
 }
 
 

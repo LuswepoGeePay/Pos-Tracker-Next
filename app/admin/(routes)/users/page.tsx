@@ -1,6 +1,5 @@
 "use client"
-import CreateAppForm from '@/components/custom/forms/apps/create-app-form'
-import { App, AppVersion } from '@/utils/types/Apps'
+
 import { useSession } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -9,22 +8,25 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import toast from 'react-hot-toast'
 import { api_endpoints } from '@/utils/api_constants'
-import ViewAppDialog from '@/components/custom/dialogs/apps/view-app-dialog'
-import EditAppDialog from '@/components/custom/dialogs/apps/edit-app-dialog'
-import EditAppVersionDialog from '@/components/custom/dialogs/appvs/edit-version-dialog'
-import ViewAppVersionDialog from '@/components/custom/dialogs/appvs/view-version-dialog'
+// import ViewUserDialog from '@/components/custom/dialogs/users/view-user-dialog'
+// import EditUserDialog from '@/components/custom/dialogs/users/edit-user-dialog'
 import { format } from 'date-fns'
-import { VersionDataTable } from '../apps/versions/versions-data-table'
-import { VersionColumns } from '../apps/versions/versions-columns'
+import { User } from '@/utils/types/User'
+import { UserDataTable } from './users-data-table'
+import { UserColumns } from './users-columns'
+import { useRouter } from 'next/navigation'
+import ViewUserDialog from '@/components/custom/dialogs/users/view-user-dialog'
+import EditUserDialog from '@/components/custom/dialogs/users/edit-user-dialog'
 
 
-const AllPosDevicesPage = () => {
+const AllUsersPage = () => {
 
-  const [appData, setAppData] = useState<AppVersion[]>([])
-  const [viewApp, setViewApp] = useState<AppVersion | null>(null);
-  const [editApp, setEditApp] = useState<AppVersion | null>(null);
-  const [deleteApp, setDeleteApp] = useState<AppVersion | null>(null);
-const { data: session, status } = useSession();
+  const [userData, setUserData] = useState<User[]>([])
+  const [viewUser, setViewUser] = useState<User | null>(null);
+  const [editUser, setEditUser] = useState<User | null>(null);
+  const [deleteUser, setDeleteUser] = useState<User | null>(null);
+  const { data: session, status } = useSession();
+  const router = useRouter()
 
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -34,14 +36,14 @@ const { data: session, status } = useSession();
   const [totalPages, setTotalPages] = useState(0);
 
 
-  const fetchApps = async () => {
-      console.log('first', session?.id)
+  const fetchUsers = async () => {
+    console.log('first', session?.id)
     const body = {
       page: pagination.pageIndex + 1,
       pageSize: pagination.pageSize,
     };
 
-    const response = await fetch(api_endpoints.getAppVersions, {
+    const response = await fetch(api_endpoints.getUsers, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -54,23 +56,18 @@ const { data: session, status } = useSession();
 
     const responseBody = await response.json();
     if (responseBody["status"] === "success") {
-      if (responseBody?.apps?.app_version) {
-        const apps = responseBody.apps.app_version.map((app: AppVersion) => ({
-          id: app.version_id,
-          version_number:app.version_number,
-          build_number:app.build_number,
-          release_notes:app.release_notes,
-          file_size_bytes:app.file_size_bytes,
-          checksum:app.checksum,
-          is_latest_stable:app.is_latest_stable,
-          released_at: format(app.released_at, "MMMM dd yyyy"),
-          file_path:app.file_path,
-          name: app.app_name,
+      if (responseBody?.users?.user) {
+        const users = responseBody.users.user.map((user: User) => ({
+          id: user.id,
+          fullname: user.fullname,
+          role: user.role,
+          status: user.status ?? false,
+          email: user.email
         }))
-        setAppData(apps);
-        setTotalPages(responseBody.apps.totalPages || 0);
+        setUserData(users);
+        setTotalPages(responseBody.users.totalPages || 0);
 
-       
+
       } // Set the fetched data
     }
     else if (responseBody["status"] == "failure") {
@@ -79,21 +76,21 @@ const { data: session, status } = useSession();
 
 
     else {
-      toast.error("Failed to fetch app version data");
+      toast.error("Failed to fetch user version data");
     }
 
   }
 
-useEffect(() => {
-  if (status === 'authenticated' && session?.accessToken) {
-    fetchApps();
-  }
-}, [status, session?.accessToken, pagination.pageIndex, pagination.pageSize]);
+  useEffect(() => {
+    if (status === 'authenticated' && session?.accessToken) {
+      fetchUsers();
+    }
+  }, [status, session?.accessToken, pagination.pageIndex, pagination.pageSize]);
 
-  const handleDeleteApp = async () => {
-    if (deleteApp) {
+  const handleDeleteUser = async () => {
+    if (deleteUser) {
       try {
-        const response = await fetch(`${api_endpoints.deleteApp}/${deleteApp.version_id}`, {
+        const response = await fetch(`${api_endpoints.deleteUser}/${deleteUser.id}`, {
           method: "DELETE",
           headers: {
             "Authorization": `Bearer ${session?.accessToken}`
@@ -105,7 +102,7 @@ useEffect(() => {
         if (responseBody["status"] === "success") {
           toast.success(responseBody["message"]);
           window.location.reload()
-          fetchApps(); // Refresh the data instead of reloading the page
+          fetchUsers(); // Refresh the data instead of reloading the page
         } else {
           toast.error(responseBody["error"]);
         }
@@ -114,7 +111,7 @@ useEffect(() => {
       catch (error) {
         toast.error(`Something went wrong, please try again`);
       } finally {
-        setDeleteApp(null);
+        setDeleteUser(null);
       }
     }
   };
@@ -127,16 +124,28 @@ useEffect(() => {
       <Card className='w-[340px] md:w-full my-20'>
 
         <CardContent className='p-8'>
-          <div className='mb-10'>
-            <p className='text-2xl font-bold'>Users</p>
-            <p className='text-sm mb-1'>View, edit, delete, users</p>
+          <div className='mb-10 '>
+            <div className='flex justify-between'>
+              <div>
+                <p className='text-2xl font-bold'>Users</p>
+                <p className='text-sm mb-1'>View, edit, delete, users</p>
+
+              </div>
+              <Button
+              onClick={()=>router.push("/admin/users/create")}
+              >
+                Create
+              </Button>
+
+            </div>
             <Separator />
           </div>
-          
-          <div className={viewApp || editApp ? 'hidden ' : ''}>
-            <VersionDataTable
-              columns={VersionColumns(setViewApp, setEditApp, setDeleteApp)}
-              data={appData} />
+
+
+          <div className={viewUser || editUser ? 'hidden ' : ''}>
+            <UserDataTable
+              columns={UserColumns(setViewUser, setEditUser, setDeleteUser)}
+              data={userData} />
 
           </div>
 
@@ -168,28 +177,28 @@ useEffect(() => {
             </Button>
           </div>
 
-          <ViewAppVersionDialog
-            app={viewApp}
-            open={!!viewApp}
-            onClose={() => setViewApp(null)}
+          <ViewUserDialog
+            user={viewUser}
+            open={!!viewUser}
+            onClose={() => setViewUser(null)}
           />
-          <EditAppVersionDialog
-            AppVersion={editApp}
-            open={!!editApp}
-            onClose={() => setEditApp(null)}
+          <EditUserDialog
+            user={editUser}
+            open={!!editUser}
+            onClose={() => setEditUser(null)}
           />
 
-          <Dialog open={!!deleteApp} onOpenChange={(open) => !open && setDeleteApp(null)}>
+          <Dialog open={!!deleteUser} onOpenChange={(open) => !open && setDeleteUser(null)}>
             <DialogContent className='w-[350px] md:w-[800px] rounded-lg'>
               <DialogHeader>
                 <DialogTitle>Confirm Deletion</DialogTitle>
               </DialogHeader>
               <p>
-                Are you sure you want to delete this App? This action cannot be undone.
+                Are you sure you want to delete this User? This action cannot be undone.
               </p>
               <DialogFooter>
-                <Button variant="outline" onClick={() => setDeleteApp(null)}>Cancel</Button>
-                <Button variant="destructive" onClick={handleDeleteApp}>Delete</Button>
+                <Button variant="outline" onClick={() => setDeleteUser(null)}>Cancel</Button>
+                <Button variant="destructive" onClick={handleDeleteUser}>Delete</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -200,4 +209,4 @@ useEffect(() => {
   )
 }
 
-export default AllPosDevicesPage
+export default AllUsersPage

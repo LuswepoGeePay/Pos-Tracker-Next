@@ -1,26 +1,26 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { App } from "@/utils/types/Apps";
-import EditAppForm from "../../forms/apps/edit-app-form";
+import { PosDevice } from "@/utils/types/PosDevices";
+import EditDeviceForm from "../../forms/devices/edit-device-form";
 
 
-interface EditAppDialogProps {
-  app: App | null;
+interface EditDeviceDialogProps {
+  pos: PosDevice | null;
   open: boolean;
   onClose: () => void;
 }
 
-const EditAppDialog: React.FC<EditAppDialogProps> = ({ app, open, onClose }) => {
-  if (!app) return null;
+const EditDeviceDialog: React.FC<EditDeviceDialogProps> = ({ pos, open, onClose }) => {
+  if (!pos) return null;
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="px-16  md:min-w-[800px]">
+      <DialogContent className="px-16  md:min-w-[800px] w-full">
         <DialogHeader className="hidden">
-          <DialogTitle>App Details</DialogTitle>
+          <DialogTitle>Device Details</DialogTitle>
         </DialogHeader>
         <div>
-        <EditAppForm app={app}/> 
+       <EditDeviceForm pos={pos}/> 
           </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Close</Button>
@@ -30,4 +30,4 @@ const EditAppDialog: React.FC<EditAppDialogProps> = ({ app, open, onClose }) => 
   )
 }
 
-export default EditAppDialog;
+export default EditDeviceDialog;

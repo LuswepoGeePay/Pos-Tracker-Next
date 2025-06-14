@@ -23,7 +23,7 @@ import Link from 'next/link'
 
 const SigninSchema = z.object({
     email: z.string().email({ message: "Invalid email address" }),
-    password: z.string().min(6, { message: "Password must be at least 6 characters" })
+    password: z.string().min(1, { message: "Password is required!" })
 })
 
 
@@ -49,6 +49,8 @@ const SignInForm = () => {
     const onSubmit = async (values: z.infer<typeof SigninSchema>) => {
 
         try {
+
+
             setLoading(true)
             const signInResponse = await signIn("credentials", {
                 email: values.email,
@@ -101,8 +103,8 @@ const SignInForm = () => {
     }
 
     return (
-        <div className="min-h-screen  flex items-center justify-center p-6">
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl overflow-hidden w-full max-w-4xl">
+        <div className="min-h-screen  flex items-center justify-center p-6  max-w-2xl w-full">
+            <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl overflow-hidden w-full">
                
                 {/* Login Form Section */}
                 <div className="p-8 md:p-12 flex flex-col justify-center">
@@ -162,7 +164,7 @@ const SignInForm = () => {
 
                             <Button
                                 type="submit"
-                                className="w-full bg-yellow-500 hover:bg-yellow-600 text-black"
+                                className="w-full bg-[#10B981] hover:bg-[#3d6d5d] text-white"
                                 disabled={loading}
                              >
                                 {loading ? (

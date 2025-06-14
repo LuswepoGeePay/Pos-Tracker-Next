@@ -1,4 +1,6 @@
+
 "use client"
+
 import { useSession } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -7,41 +9,41 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import toast from 'react-hot-toast'
 import { api_endpoints } from '@/utils/api_constants'
+// import ViewUserDialog from '@/components/custom/dialogs/users/view-user-dialog'
+// import EditUserDialog from '@/components/custom/dialogs/users/edit-user-dialog'
 import { format } from 'date-fns'
-import { PosDevice } from '@/utils/types/PosDevices'
-import { PosDeviceDataTable } from './devices-data-table'
-import { PosDeviceColumns } from './devices-columns'
-import ViewDeviceDialog from '@/components/custom/dialogs/devices/view-device-dialog'
-import EditDeviceDialog from '@/components/custom/dialogs/devices/edit-device-dialog'
+import { User } from '@/utils/types/User'
+import { UserDataTable } from '@/app/admin/(routes)/users/users-data-table'
+import { UserColumns } from '@/app/admin/(routes)/users/users-columns'
 
 
-const AllPosDevicesPage = () => {
+const DashboardUsers = () => {
 
-  const [posDeviceData, setPosDeviceData] = useState<PosDevice[]>([])
-  const [viewPosDevice, setViewPosDevice] = useState<PosDevice | null>(null);
-  const [editPosDevice, setEditPosDevice] = useState<PosDevice | null>(null);
-  const [deletePosDevice, setDeletePosDevice] = useState<PosDevice | null>(null);
+  const [userData, setUserData] = useState<User[]>([])
+  const [viewUser, setViewUser] = useState<User | null>(null);
+  const [editUser, setEditUser] = useState<User | null>(null);
+  const [deleteUser, setDeleteUser] = useState<User | null>(null);
 const { data: session, status } = useSession();
 
   const [pagination, setPagination] = useState({
     pageIndex: 0,
-    pageSize: 20,
+    pageSize: 10,
   });
 
   const [totalPages, setTotalPages] = useState(0);
 
 
-  const fetchPosDevices = async () => {
+  const fetchUsers = async () => {
       console.log('first', session?.id)
     const body = {
       page: pagination.pageIndex + 1,
       pageSize: pagination.pageSize,
     };
 
-    const response = await fetch(api_endpoints.getPosDevices, {
+    const response = await fetch(api_endpoints.getUsers, {
       method: "POST",
       headers: {
-        "Content-Type": "posDevicelication/json",
+        "Content-Type": "application/json",
         "Authorization": `Bearer ${session?.accessToken}`
       },
       body: JSON.stringify(body)
@@ -51,24 +53,16 @@ const { data: session, status } = useSession();
 
     const responseBody = await response.json();
     if (responseBody["status"] === "success") {
-      if (responseBody?.devices?.posdevice) {
-        const posDevices = responseBody.devices.posdevice.map((posDevice: PosDevice) => ({
-          id: posDevice.id,
-          serial_number:posDevice.serial_number,
-          current_app_version:posDevice.current_app_version,
-          last_long:posDevice.last_known_longitude,
-          last_lat:posDevice.last_known_latitude,
-          status:posDevice.status,
-          device_model: posDevice.device_model,
-          operating_system:posDevice.operating_system,
-          loc_last:posDevice.location_last_updated,
-          description:posDevice.description,
-          name:posDevice.name,
-          business_name:posDevice.business_name
-         
+      if (responseBody?.users?.user) {
+        const users = responseBody.users.user.map((user: User) => ({
+          id: user.id,
+          fullname:user.fullname,
+          role:user.role,
+          status:user.status ?? false,
+          email:user.email
         }))
-        setPosDeviceData(posDevices);
-        setTotalPages(responseBody.devices.totalPages || 0);
+        setUserData(users);
+        setTotalPages(responseBody.users.totalPages || 0);
 
        
       } // Set the fetched data
@@ -79,21 +73,21 @@ const { data: session, status } = useSession();
 
 
     else {
-      toast.error("Failed to fetch posDevice version data");
+      toast.error("Failed to fetch user version data");
     }
 
   }
 
 useEffect(() => {
   if (status === 'authenticated' && session?.accessToken) {
-    fetchPosDevices();
+    fetchUsers();
   }
 }, [status, session?.accessToken, pagination.pageIndex, pagination.pageSize]);
 
-  const handleDeletePosDevice = async () => {
-    if (deletePosDevice) {
+  const handleDeleteUser = async () => {
+    if (deleteUser) {
       try {
-        const response = await fetch(`${api_endpoints.deletePosDevice}/${deletePosDevice.id}`, {
+        const response = await fetch(`${api_endpoints.deleteUser}/${deleteUser.id}`, {
           method: "DELETE",
           headers: {
             "Authorization": `Bearer ${session?.accessToken}`
@@ -105,7 +99,7 @@ useEffect(() => {
         if (responseBody["status"] === "success") {
           toast.success(responseBody["message"]);
           window.location.reload()
-          fetchPosDevices(); // Refresh the data instead of reloading the page
+          fetchUsers(); // Refresh the data instead of reloading the page
         } else {
           toast.error(responseBody["error"]);
         }
@@ -114,29 +108,29 @@ useEffect(() => {
       catch (error) {
         toast.error(`Something went wrong, please try again`);
       } finally {
-        setDeletePosDevice(null);
+        setDeleteUser(null);
       }
     }
   };
 
 
   return (
-    <main className='m-10'>
+    <main className=''>
 
 
       <Card className='w-[340px] md:w-full my-20'>
 
         <CardContent className='p-8'>
           <div className='mb-10'>
-            <p className='text-2xl font-bold'>Point Of Sale Devices</p>
-            <p className='text-sm mb-1'>View, edit, delete, existing Point Of Sale Devices</p>
+            <p className='text-2xl font-bold'>Users</p>
+            <p className='text-sm mb-1'>View, edit, delete, users</p>
             <Separator />
           </div>
           
-          <div className={viewPosDevice || editPosDevice ? 'hidden ' : ''}>
-            <PosDeviceDataTable
-              columns={PosDeviceColumns(setViewPosDevice, setEditPosDevice, setDeletePosDevice)}
-              data={posDeviceData} />
+          <div className={viewUser || editUser ? 'hidden ' : ''}>
+            <UserDataTable
+              columns={UserColumns(setViewUser, setEditUser, setDeleteUser)}
+              data={userData} />
 
           </div>
 
@@ -168,28 +162,28 @@ useEffect(() => {
             </Button>
           </div>
 
-          <ViewDeviceDialog
-            pos={viewPosDevice}
-            open={!!viewPosDevice}
-            onClose={() => setViewPosDevice(null)}
+          {/* <ViewUserDialog
+            user={viewUser}
+            open={!!viewUser}
+            onClose={() => setViewUser(null)}
           />
-          <EditDeviceDialog
-            pos={editPosDevice}
-            open={!!editPosDevice}
-            onClose={() => setEditPosDevice(null)}
-          />
+          <EditUserDialog
+            User={editUser}
+            open={!!editUser}
+            onClose={() => setEditUser(null)}
+          /> */}
 
-          <Dialog open={!!deletePosDevice} onOpenChange={(open) => !open && setDeletePosDevice(null)}>
+          <Dialog open={!!deleteUser} onOpenChange={(open) => !open && setDeleteUser(null)}>
             <DialogContent className='w-[350px] md:w-[800px] rounded-lg'>
               <DialogHeader>
                 <DialogTitle>Confirm Deletion</DialogTitle>
               </DialogHeader>
               <p>
-                Are you sure you want to delete this PosDevice? This action cannot be undone.
+                Are you sure you want to delete this User? This action cannot be undone.
               </p>
               <DialogFooter>
-                <Button variant="outline" onClick={() => setDeletePosDevice(null)}>Cancel</Button>
-                <Button variant="destructive" onClick={handleDeletePosDevice}>Delete</Button>
+                <Button variant="outline" onClick={() => setDeleteUser(null)}>Cancel</Button>
+                <Button variant="destructive" onClick={handleDeleteUser}>Delete</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -200,4 +194,4 @@ useEffect(() => {
   )
 }
 
-export default AllPosDevicesPage
+export default DashboardUsers

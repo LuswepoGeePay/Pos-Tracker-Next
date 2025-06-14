@@ -55,6 +55,17 @@ const UserActions: React.FC<UserActionsProps> = ({ row, onView, onEdit, onDelete
 };
 
 
+const StatusCell = ({ row }: { row: Row<PosDevice> }) => {
+    const status = row.original
+    return (
+        <>
+            <div className={status ? "bg-green-500 p-1 w-full max-w-lg rounded-2xl" : "bg-red-500 p-2 rounded-2xl"}>
+               <p >{status.status ? <p className="text-green-100">Active</p> : <p>Inactive</p> }</p>             </div>
+        </>
+    )
+}
+
+
 
 
 const DescriptionCell = ({ row }: { row: Row<PosDevice> }) => {
@@ -88,6 +99,10 @@ export const PosDeviceColumns = (
                 )
             },
         },
+        {
+            accessorKey: "business_name",
+              header: "Entity",
+        },
          {
             accessorKey: "serial_number",
               header: "Serial Number",
@@ -99,19 +114,11 @@ export const PosDeviceColumns = (
         
         {
             accessorKey: "status",
-            header: "Status"
+            header: "Status",
+            cell:StatusCell
         },
-         {
-            accessorKey: "description",
-            header: "Description",
-            cell: DescriptionCell
-        },
-        
 
-         {
-            accessorKey: "device_model",
-              header: "Device Model",
-        },
+       
         {
             accessorKey: "last_long",
             header: "Last known longitude",
@@ -127,12 +134,7 @@ export const PosDeviceColumns = (
             accessorKey: "loc_last",
               header: "Location last updated",
         },
-         {
-            accessorKey: "operating_system",
-              header: "Operating System",
-        },
-        
-        
+         
 
         {
             id: "Actions",

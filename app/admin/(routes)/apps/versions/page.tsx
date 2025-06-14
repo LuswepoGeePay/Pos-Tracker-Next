@@ -9,13 +9,12 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import toast from 'react-hot-toast'
 import { api_endpoints } from '@/utils/api_constants'
-import ViewAppDialog from '@/components/custom/dialogs/apps/view-app-dialog'
-import EditAppDialog from '@/components/custom/dialogs/apps/edit-app-dialog'
 import { VersionDataTable } from './versions-data-table'
 import { VersionColumns } from './versions-columns'
 import EditAppVersionDialog from '@/components/custom/dialogs/appvs/edit-version-dialog'
 import ViewAppVersionDialog from '@/components/custom/dialogs/appvs/view-version-dialog'
 import { format } from 'date-fns'
+import { useRouter } from 'next/navigation'
 
 
 const AppVersionsPage = () => {
@@ -24,7 +23,8 @@ const AppVersionsPage = () => {
   const [viewApp, setViewApp] = useState<AppVersion | null>(null);
   const [editApp, setEditApp] = useState<AppVersion | null>(null);
   const [deleteApp, setDeleteApp] = useState<AppVersion | null>(null);
-const { data: session, status } = useSession();
+  const { data: session, status } = useSession();
+  const router = useRouter()
 
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -35,7 +35,7 @@ const { data: session, status } = useSession();
 
 
   const fetchApps = async () => {
-      console.log('first', session?.id)
+    console.log('first', session?.id)
     const body = {
       page: pagination.pageIndex + 1,
       pageSize: pagination.pageSize,
@@ -56,21 +56,23 @@ const { data: session, status } = useSession();
     if (responseBody["status"] === "success") {
       if (responseBody?.apps?.app_version) {
         const apps = responseBody.apps.app_version.map((app: AppVersion) => ({
-          id: app.version_id,
-          version_number:app.version_number,
-          build_number:app.build_number,
-          release_notes:app.release_notes,
-          file_size_bytes:app.file_size_bytes,
-          checksum:app.checksum,
-          is_latest_stable:app.is_latest_stable,
+          version_id: app.version_id,
+          version_number: app.version_number,
+          build_number: app.build_number,
+          release_notes: app.release_notes,
+          file_size_bytes: app.file_size_bytes,
+          checksum: app.checksum,
+          is_latest_stable: app.is_latest_stable ?? false,
           released_at: format(app.released_at, "MMMM dd yyyy"),
-          file_path:app.file_path,
+          file_path: app.file_path,
           name: app.app_name,
+          is_active:app.is_active ?? false,
+          app_name:app.app_name,
         }))
         setAppData(apps);
         setTotalPages(responseBody.apps.totalPages || 0);
 
-       
+
       } // Set the fetched data
     }
     else if (responseBody["status"] == "failure") {
@@ -84,11 +86,11 @@ const { data: session, status } = useSession();
 
   }
 
-useEffect(() => {
-  if (status === 'authenticated' && session?.accessToken) {
-    fetchApps();
-  }
-}, [status, session?.accessToken, pagination.pageIndex, pagination.pageSize]);
+  useEffect(() => {
+    if (status === 'authenticated' && session?.accessToken) {
+      fetchApps();
+    }
+  }, [status, session?.accessToken, pagination.pageIndex, pagination.pageSize]);
 
   const handleDeleteApp = async () => {
     if (deleteApp) {
@@ -126,13 +128,15 @@ useEffect(() => {
 
       <Card className='w-[340px] md:w-full my-20'>
 
+      
+
         <CardContent className='p-8'>
           <div className='mb-10'>
             <p className='text-2xl font-bold'>App Versions</p>
             <p className='text-sm mb-1'>View, edit, delete, existing Application Versions</p>
             <Separator />
           </div>
-          
+
           <div className={viewApp || editApp ? 'hidden ' : ''}>
             <VersionDataTable
               columns={VersionColumns(setViewApp, setEditApp, setDeleteApp)}
@@ -174,7 +178,7 @@ useEffect(() => {
             onClose={() => setViewApp(null)}
           />
           <EditAppVersionDialog
-            AppVersion={editApp}
+            appVersion={editApp}
             open={!!editApp}
             onClose={() => setEditApp(null)}
           />
