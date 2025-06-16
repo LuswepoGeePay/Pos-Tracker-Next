@@ -24,4 +24,5 @@ export type LHistory = {
     timestamp:string;
     id:string;
     device_name:string;
+    region:string;
 }

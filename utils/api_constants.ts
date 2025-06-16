@@ -1,5 +1,5 @@
 export const base_url = "http://localhost:8050/v1";
-export const login_url = "http://localhost:8050";
+export const login_url = "http://localhost:8050/v1";
 export const domain_name = "testhof.crabdance.com"
 export const metaDataUrl ="https://testhof.crabdance.com";
 
@@ -32,7 +32,7 @@ export const api_endpoints = {
     getApps: `${base_url}/apps/get`,
     getApp: `${base_url}/get-App`,
     getDashboardTileInfo: `${base_url}/dashboard/tiles/get`,
-    getEvent: `${base_url}/get-event`,
+    getEvents: `${base_url}/dashboard/events/get`,
     getMessages: `${base_url}/get-messages`,
     getTestimonies: `${base_url}/get-testimonies`,
     getTestimoniesPortal: `${base_url}/get-testimonies-portal`,

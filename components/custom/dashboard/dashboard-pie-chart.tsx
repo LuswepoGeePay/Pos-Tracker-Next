@@ -14,6 +14,10 @@ import {
   ChartLegendContent,
 } from "@/components/ui/chart"
 
+const DashboardPieChart = () => {
+
+
+  
 const chartData = [
   { status: "offline", devices: 275 },
   { status: "online", devices: 187 },
@@ -24,7 +28,6 @@ const COLORS = {
   online: "var(--chart-2)",
 }
 
-const DashboardPieChart = () => {
   return (
     <Card className="flex flex-col w-full">
       <CardHeader className="items-center pb-0">

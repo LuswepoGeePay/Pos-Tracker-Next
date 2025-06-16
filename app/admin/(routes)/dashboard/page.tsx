@@ -8,16 +8,11 @@ import DashboardUsers from '@/components/custom/dashboard/dashboard-users'
 import DashboardQuickActions from '@/components/custom/dashboard/dashboard-quick-actions'
 
 const DasboardPage = () => {
-
-
   return (
-    <main className='w-full flex flex-col gap-10 max-w-6xl m-8'>
+    <main className='w-full flex flex-col gap-10 max-w-7xl mx-auto m-8'>
       <DasboardHeader />
       <DasboardTiles />
-
-     
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-10'>
-       
         <DashboardChart />
         <DashboardLineChart />
       </div>

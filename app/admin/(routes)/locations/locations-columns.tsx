@@ -74,57 +74,55 @@ export const LocationColumns = (
     onDelete: (LHistory: LHistory) => void,
 
 ): ColumnDef<LHistory>[] => [
-       {
-                   accessorKey: "posdevice_id",
-                   header: "POS Device ID",
-               },
-               {
-                   accessorKey: "name",
-                   header: ({ column }) => {
-                       return (
-                           <Button
-                               variant="ghost"
-                               onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                           >
-                               Device Name
-                               <ArrowUpDown className="ml-2 h-4 w-4" />
-                           </Button>
-                       )
-                   },
-               },
-       
-               {
-                   accessorKey: "longitude",
-                   header: "Longitude",
-               },
-       
-               {
-                   accessorKey: "latitude",
-                   header: "Latitude"
-               },
-               {
-                   accessorKey: "accuracy",
-                   header: "Accuracy"
-               },
-       
-               {
-                   accessorKey: "timestamp",
-                   header: "Date Added",
-               },
-             
-       
-       
-               {
-                   id: "Actions",
-                   header: "Actions",
-                   cell: ({ row }) => (
-                       <UserActions
-                           row={row.original}
-                           onView={setViewUser}
-                           onEdit={setEditUser}
-                           onDelete={onDelete}
-       
-                       />
-                   ),
-               }
-            ]
+        {
+            accessorKey: "posdevice_id",
+            header: "POS Device ID",
+        },
+        {
+            accessorKey: "name",
+            header: ({ column }) => {
+                return (
+                    <Button
+                        variant="ghost"
+                        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    >
+                        Device Name
+                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                    </Button>
+                )
+            },
+        },
+
+        {
+            accessorKey: "longitude",
+            header: "Longitude",
+        },
+
+        {
+            accessorKey: "latitude",
+            header: "Latitude"
+        },
+        {
+            accessorKey: "region",
+            header: "Region"
+        },
+        {
+            accessorKey: "timestamp",
+            header: "Ping Time",
+        },
+
+
+        {
+            id: "Actions",
+            header: "Actions",
+            cell: ({ row }) => (
+                <UserActions
+                    row={row.original}
+                    onView={setViewUser}
+                    onEdit={setEditUser}
+                    onDelete={onDelete}
+
+                />
+            ),
+        }
+    ]

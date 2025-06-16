@@ -75,7 +75,7 @@ const CreateAppForm = () => {
 
     return (
 
-        <div className=''>
+        <div className='shadow-lg p-8 border rounded-2xl'>
             <div className='mb-10'>
 
                 <p className='text-2xl font-bold'>Create an app </p>

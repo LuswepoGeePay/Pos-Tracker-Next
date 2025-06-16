@@ -121,8 +121,6 @@ useEffect(() => {
 
   return (
     <main className='m-10'>
-
-
       <Card className='w-[340px] md:w-full my-20'>
 
         <CardContent className='p-8'>

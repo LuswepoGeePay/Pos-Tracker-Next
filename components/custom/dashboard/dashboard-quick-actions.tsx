@@ -28,7 +28,7 @@ const quickActions = [
 
 const DashboardQuickActions = () => {
   return (
-    <Card>
+    <Card className='h-fit'>
       <CardHeader className='font-semibold'>Quick Actions</CardHeader>
       <CardContent>
 

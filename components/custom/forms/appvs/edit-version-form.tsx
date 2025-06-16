@@ -22,9 +22,21 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { AppVersion } from '@/utils/types/Apps'
 
-const EditAppVersionSchema = z.object({
+// const EditAppVersionSchema = z.object({
+//     app_id: z.string().optional(),
+//     versionNumber: z.string().optional().optional(),
+//     version_id: z.string().optional(),
+//     releaseNotes: z.string().optional(),
+//     is_active: z.boolean().optional(),
+//     is_latest_stable: z.boolean().optional(),
+//     apk: z.instanceof(File).optional().refine((file) => {
+//         return !file || (file && file.size <= 200 * 1024 * 1024);
+//     }, "File must be under 200mb"),
+// })
+
+const EditAppVersionSchema = typeof window !== "undefined" ? z.object({
     app_id: z.string().optional(),
-    versionNumber: z.string().optional().optional(),
+    versionNumber: z.string().min(1, "Version number is required"),
     version_id: z.string().optional(),
     releaseNotes: z.string().optional(),
     is_active: z.boolean().optional(),
@@ -32,8 +44,15 @@ const EditAppVersionSchema = z.object({
     apk: z.instanceof(File).optional().refine((file) => {
         return !file || (file && file.size <= 200 * 1024 * 1024);
     }, "File must be under 200mb"),
-})
-
+}) : z.object({
+    app_id: z.string().optional(),
+    versionNumber: z.string().min(1, "Version number is required"),
+    version_id: z.string().optional(),
+    releaseNotes: z.string().optional(),
+    is_active: z.boolean().optional(),
+    is_latest_stable: z.boolean().optional(),
+    apk: z.any().optional(), // Fallback for server-side
+});
 interface EditAppVersionFormProps {
     version: AppVersion | null;
 

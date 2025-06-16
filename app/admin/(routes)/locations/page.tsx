@@ -36,7 +36,6 @@ const AllPosDevicesPage = () => {
 
 
   const fetchLocations = async () => {
-    console.log('first', session?.id)
     const body = {
       page: pagination.pageIndex + 1,
       pageSize: pagination.pageSize,
@@ -60,8 +59,9 @@ const AllPosDevicesPage = () => {
           longitude: location.longitude,
           latitude: location.latitude,
           accuracy: location.accuracy,
-          timestamp: format(location.timestamp, "MMMM dd yyyy"),
-          name:location.device_name
+          timestamp: format(location.timestamp, "MMMM dd yyyy, HH:mm"),
+          name:location.device_name,
+          region:location.region
         }))
         setLocationData(locations);
         setTotalPages(responseBody.history.totalPages || 0);

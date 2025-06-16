@@ -4,6 +4,7 @@ import { api_endpoints } from '@/utils/api_constants'
 import { CodeXml, LayoutPanelLeft, MapPinCheck, PowerOff, Smartphone, SmartphoneCharging } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
 
 
 
@@ -34,8 +35,10 @@ const DasboardTiles = () => {
           offline_devices: data.info.pos_devices - data.info.active_devices,
           apps: data.info.apps,
           app_version: data.info.app_version,
-          new_locations: 2100, // hardcoded for now
+          new_locations: data.locations_tracked ?? 0, // hardcoded for now
         })
+      } else if(data.status == "failure"){
+        toast.error("Unable to fetch dashboard information.")
       }
     } catch (err) {
       console.error('Failed to fetch dashboard info:', err)
@@ -48,7 +51,7 @@ const DasboardTiles = () => {
     if (status === 'authenticated' && session?.accessToken) {
       fetchTileInfo()
     }
-  }, [status, session?.accessToken, ]);
+  }, [status, session?.accessToken]);
 
 
 const dynamicCardMetaData = [
@@ -97,7 +100,7 @@ const dynamicCardMetaData = [
   ]
     return (
         <section className='w-full'>
-            <div className='grid  sm:grid-cols-1  md:grid-cols-2 lg:grid lg:grid-cols-3 gap-8'>
+            <div className='grid sm:grid-cols-1  md:grid-cols-2 lg:grid lg:grid-cols-3 gap-8'>
                 {dynamicCardMetaData.map((card, index) =>
                     <Card key={index} className=''>
                         <CardContent className='flex gap-5 items-center '>
