@@ -13,6 +13,7 @@ export type PosDevice = {
     location_last_updated:string;
     description:string;
     business_name:string;
+    fingerprint:string;
 }
 
 

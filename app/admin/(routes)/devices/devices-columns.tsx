@@ -20,13 +20,6 @@ type UserActionsProps = {
 
 
 const UserActions: React.FC<UserActionsProps> = ({ row, onView, onEdit, onDelete }) => {
-
-    const appID = row.id;
-      const router = useRouter()
-    
-      const handleAddApk = () => {
-        router.push(`/admin/devices/${appID}`)
-      }
     
     return (
         <>
@@ -40,8 +33,7 @@ const UserActions: React.FC<UserActionsProps> = ({ row, onView, onEdit, onDelete
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleAddApk}>Add apk</DropdownMenuItem>
-
+              
                     <DropdownMenuItem onClick={() => onView(row)}>View</DropdownMenuItem>
                     <DropdownMenuItem onClick={() => onEdit(row)}>Edit</DropdownMenuItem>
                     
@@ -56,11 +48,11 @@ const UserActions: React.FC<UserActionsProps> = ({ row, onView, onEdit, onDelete
 
 
 const StatusCell = ({ row }: { row: Row<PosDevice> }) => {
-    const status = row.original
+    const status = row.original.status
     return (
         <>
-            <div className={status ? "bg-green-500 p-1 w-full max-w-lg rounded-2xl" : "bg-red-500 p-2 rounded-2xl"}>
-               <p >{status.status ? <p className="text-green-100">Active</p> : <p>Inactive</p> }</p>             </div>
+            <div className={status =="online" ? "bg-green-500 p-1 w-full max-w-lg rounded-2xl" : "bg-red-500 p-2 rounded-2xl"}>
+               <p >{status =="online" ?  <p className="text-green-100">Online</p> : <p>Offline</p> }</p>             </div>
         </>
     )
 }

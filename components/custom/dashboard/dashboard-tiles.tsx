@@ -28,11 +28,13 @@ const DasboardTiles = () => {
       },}) 
       const data = await res.json()
 
+      console.log('data', data)
+
       if (data.status === 'success') {
         setTileData({
-          pos_devices: data.info.pos_devices,
-          active_devices: data.info.active_devices,
-          offline_devices: data.info.pos_devices - data.info.active_devices,
+          pos_devices: data.info.pos_devices ?? 0,
+          active_devices: data.info.active_devices ?? 0,
+          offline_devices: data.info.offline_devices  ?? 0,
           apps: data.info.apps,
           app_version: data.info.app_version,
           new_locations: data.locations_tracked ?? 0, // hardcoded for now

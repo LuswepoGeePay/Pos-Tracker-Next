@@ -58,15 +58,15 @@ export function LocationDataTable<TData, TValue>({
     });
 
     return (
-        <div className="w-full space-y-4 dark:bg-[#0d1b2a]">
-            <div className="flex flex-col sm:flex-row sm:items-center py-4 gap-3 dark:bg-[#0d1b2a]">
+        <div className="w-full space-y-4 dark:bg-inherit">
+            <div className="flex flex-col sm:flex-row sm:items-center py-4 gap-3 dark:bg-inherit">
                 <Input
                     placeholder="Filter names..."
                     value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
                     onChange={(event) =>
                         table.getColumn("name")?.setFilterValue(event.target.value)
                     }
-                    className="max-w-sm dark:bg-[#0d1b2a] dark:border-gray-600"
+                    className="max-w-sm dark:bg-inherit dark:border-gray-600"
                 />
             </div>
             

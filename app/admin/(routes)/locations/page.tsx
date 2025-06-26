@@ -17,6 +17,7 @@ import { format } from 'date-fns'
 import { LHistory } from '@/utils/types/PosDevices'
 import { LocationDataTable } from './locations-data-table'
 import { LocationColumns } from './locations-columns'
+import ViewLHistoryDialog from '@/components/custom/dialogs/locations/view-device-dialog'
 
 
 const AllPosDevicesPage = () => {
@@ -165,17 +166,12 @@ const AllPosDevicesPage = () => {
             </Button>
           </div>
 
-          {/* <ViewLHistoryDialog
-            location={viewLocation}
+          <ViewLHistoryDialog
+            history={viewLocation}
             open={!!viewLocation}
             onClose={() => setViewLocation(null)}
           />
-          <EditLHistoryDialog
-            LHistory={editLocation}
-            open={!!editLocation}
-            onClose={() => setEditLocation(null)}
-          /> */}
-
+    
           <Dialog open={!!deleteLocation} onOpenChange={(open) => !open && setDeleteLocation(null)}>
             <DialogContent className='w-[350px] md:w-[800px] rounded-lg'>
               <DialogHeader>

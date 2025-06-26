@@ -21,12 +21,6 @@ type UserActionsProps = {
 
 const UserActions: React.FC<UserActionsProps> = ({ row, onView, onEdit, onDelete }) => {
 
-    const appID = row.id;
-    const router = useRouter()
-
-    const handleAddApk = () => {
-        router.push(`/admin/apps/versions/${appID}`)
-    }
 
     return (
         <>
@@ -40,12 +34,11 @@ const UserActions: React.FC<UserActionsProps> = ({ row, onView, onEdit, onDelete
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleAddApk}>Add apk</DropdownMenuItem>
 
                     <DropdownMenuItem onClick={() => onView(row)}>View</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => onEdit(row)}>Edit</DropdownMenuItem>
+                    <DropdownMenuItem className="hidden" onClick={() => onEdit(row)}>Edit</DropdownMenuItem>
 
-                    <DropdownMenuItem onClick={() => onDelete(row)}>Delete</DropdownMenuItem>
+                    <DropdownMenuItem className="hidden" onClick={() => onDelete(row)}>Delete</DropdownMenuItem>
 
                 </DropdownMenuContent>
             </DropdownMenu>

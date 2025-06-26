@@ -12,15 +12,44 @@ import { PosDeviceDataTable } from './devices-data-table'
 import { PosDeviceColumns } from './devices-columns'
 import ViewDeviceDialog from '@/components/custom/dialogs/devices/view-device-dialog'
 import EditDeviceDialog from '@/components/custom/dialogs/devices/edit-device-dialog'
+import z from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { Input } from '@/components/ui/input'
+import { Link, Loader2 } from 'lucide-react'
+import { format } from 'date-fns'
+const SigninSchema = z.object({
+  start_date: z.string().min(1,{ message: "Invalid start date " }),
+  end_date: z.string().min(1, { message: "Password is required!" })
+})
 
 
 const AllPosDevicesPage = () => {
+
+  const form = useForm<z.infer<typeof SigninSchema>>({
+    resolver: zodResolver(SigninSchema),
+    defaultValues: {
+      start_date: '',
+      end_date: '',
+
+    }
+  })
+
+  const [loading, setLoading] = useState(false)
 
   const [posDeviceData, setPosDeviceData] = useState<PosDevice[]>([])
   const [viewPosDevice, setViewPosDevice] = useState<PosDevice | null>(null);
   const [editPosDevice, setEditPosDevice] = useState<PosDevice | null>(null);
   const [deletePosDevice, setDeletePosDevice] = useState<PosDevice | null>(null);
-const { data: session, status } = useSession();
+  const { data: session, status } = useSession();
 
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -31,7 +60,7 @@ const { data: session, status } = useSession();
 
 
   const fetchPosDevices = async () => {
-      console.log('first', session?.id)
+    console.log('first', session?.id)
     const body = {
       page: pagination.pageIndex + 1,
       pageSize: pagination.pageSize,
@@ -46,48 +75,44 @@ const { data: session, status } = useSession();
       body: JSON.stringify(body)
     });
 
-    console.log('first', session?.accessToken)
-
     const responseBody = await response.json();
     if (responseBody["status"] === "success") {
       if (responseBody?.devices?.posdevice) {
         const posDevices = responseBody.devices.posdevice.map((posDevice: PosDevice) => ({
           id: posDevice.id,
-          serial_number:posDevice.serial_number,
-          current_app_version:posDevice.current_app_version,
-          last_long:posDevice.last_known_longitude,
-          last_lat:posDevice.last_known_latitude,
-          status:posDevice.status,
+          serial_number: posDevice.serial_number,
+          current_app_version: posDevice.current_app_version,
+          last_long: posDevice.last_known_longitude,
+          last_lat: posDevice.last_known_latitude,
+          status: posDevice.status,
           device_model: posDevice.device_model,
-          operating_system:posDevice.operating_system,
-          loc_last:posDevice.location_last_updated,
-          description:posDevice.description,
-          name:posDevice.name,
-          business_name:posDevice.business_name
-         
+          operating_system: posDevice.operating_system,
+          loc_last:  format(posDevice.location_last_updated, "MMMM dd yyyy, HH:mm"),
+          description: posDevice.description,
+          name: posDevice.name,
+          business_name: posDevice.business_name,
+          fingerprint:posDevice.fingerprint
         }))
         setPosDeviceData(posDevices);
         setTotalPages(responseBody.devices.totalPages || 0);
 
-       
+
       } // Set the fetched data
     }
     else if (responseBody["status"] == "failure") {
       toast.error(`${responseBody.error}\n${responseBody.detail}`)
     }
-
-
     else {
       toast.error("Failed to fetch posDevice version data");
     }
 
   }
 
-useEffect(() => {
-  if (status === 'authenticated' && session?.accessToken) {
-    fetchPosDevices();
-  }
-}, [status, session?.accessToken, pagination.pageIndex, pagination.pageSize]);
+  useEffect(() => {
+    if (status === 'authenticated' && session?.accessToken) {
+      fetchPosDevices();
+    }
+  }, [status, session?.accessToken, pagination.pageIndex, pagination.pageSize]);
 
   const handleDeletePosDevice = async () => {
     if (deletePosDevice) {
@@ -120,16 +145,109 @@ useEffect(() => {
 
 
   return (
-    <main className='m-10'>
+    <main className='m-10 '>
+
+      <Card>
+        <CardContent>
+           <div className="text-center mb-6">
+                <h1 className="text-2xl font-bold ">Filter</h1>
+                <p className="text-gray-700">Filter by status, date, app version</p>
+              </div>
+          <Form {...form}>
+            <form
+              // onSubmit={form.handleSubmit(onSubmit)}
+              className="grid grid-cols-1 md:grid-cols-2 gap-5"
+            >
+             
+
+              <FormField
+                control={form.control}
+                name="start_date"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="">Start Date</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter your start date"
+                        {...field}
+                        className="  placeholder-gray-400 focus:border-amber-500"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-400" />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="end_date"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="">End Date</FormLabel>
+                    <FormControl>
+                      <div className='flex'>
+                        <Input
+                          placeholder="Enter your end date"
+                          {...field}
+                          className="  placeholder-gray-400 focus:border-amber-500"
+                        />
+                      </div>
+
+                    </FormControl>
+                    <FormMessage className="text-red-400" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="end_date"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="">App Version</FormLabel>
+                    <FormControl>
+                      <div className='flex'>
+                        <Input
+                          placeholder="Enter your end date"
+                          {...field}
+                          className="  placeholder-gray-400 focus:border-amber-500"
+                        />
+                      </div>
+
+                    </FormControl>
+                    <FormMessage className="text-red-400" />
+                  </FormItem>
+                )}
+              />
+
+              <Button
+                type="submit"
+                className="w-full bg-[#00aeff] hover:bg-[#3c3c8c] text-white"
+                disabled={loading}
+              >
+                {loading ? (
+                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Filtering</>
+                ) : (
+                  "Apply Filters"
+                )}
+              </Button>
+
+             
+
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+
+
       <Card className='w-[340px] md:w-full my-20'>
 
-        <CardContent className='p-8'>
+        <CardContent className='p-8 w-full'>
           <div className='mb-10'>
             <p className='text-2xl font-bold'>Point Of Sale Devices</p>
             <p className='text-sm mb-1'>View, edit, delete, existing Point Of Sale Devices</p>
             <Separator />
           </div>
-          
+
           <div className={viewPosDevice || editPosDevice ? 'hidden ' : ''}>
             <PosDeviceDataTable
               columns={PosDeviceColumns(setViewPosDevice, setEditPosDevice, setDeletePosDevice)}
