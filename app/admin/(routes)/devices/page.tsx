@@ -27,8 +27,9 @@ import { Input } from '@/components/ui/input'
 import { Link, Loader2 } from 'lucide-react'
 import { format } from 'date-fns'
 const SigninSchema = z.object({
-  start_date: z.string().min(1,{ message: "Invalid start date " }),
-  end_date: z.string().min(1, { message: "Password is required!" })
+  start_date: z.string().min(1, { message: "Invalid start date " }),
+  end_date: z.string().min(1, { message: "Password is required!" }),
+  appversion: z.string().optional(),
 })
 
 
@@ -39,6 +40,7 @@ const AllPosDevicesPage = () => {
     defaultValues: {
       start_date: '',
       end_date: '',
+      appversion: ""
 
     }
   })
@@ -50,6 +52,7 @@ const AllPosDevicesPage = () => {
   const [editPosDevice, setEditPosDevice] = useState<PosDevice | null>(null);
   const [deletePosDevice, setDeletePosDevice] = useState<PosDevice | null>(null);
   const { data: session, status } = useSession();
+  const [count, setCount] = useState<number | null>(0);
 
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -60,7 +63,7 @@ const AllPosDevicesPage = () => {
 
 
   const fetchPosDevices = async () => {
-    console.log('first', session?.id)
+    
     const body = {
       page: pagination.pageIndex + 1,
       pageSize: pagination.pageSize,
@@ -69,7 +72,7 @@ const AllPosDevicesPage = () => {
     const response = await fetch(api_endpoints.getPosDevices, {
       method: "POST",
       headers: {
-        "Content-Type": "posDevicelication/json",
+        "Content-Type": "application/json",
         "Authorization": `Bearer ${session?.accessToken}`
       },
       body: JSON.stringify(body)
@@ -87,14 +90,15 @@ const AllPosDevicesPage = () => {
           status: posDevice.status,
           device_model: posDevice.device_model,
           operating_system: posDevice.operating_system,
-          loc_last:  format(posDevice.location_last_updated, "MMMM dd yyyy, HH:mm"),
+          loc_last: format(posDevice.location_last_updated, "MMMM dd yyyy, HH:mm"),
           description: posDevice.description,
           name: posDevice.name,
           business_name: posDevice.business_name,
-          fingerprint:posDevice.fingerprint
+          fingerprint: posDevice.fingerprint
         }))
         setPosDeviceData(posDevices);
         setTotalPages(responseBody.devices.totalPages || 0);
+        setCount(responseBody.devices.count || 0)
 
 
       } // Set the fetched data
@@ -149,16 +153,17 @@ const AllPosDevicesPage = () => {
 
       <Card>
         <CardContent>
-           <div className="text-center mb-6">
-                <h1 className="text-2xl font-bold ">Filter</h1>
-                <p className="text-gray-700">Filter by status, date, app version</p>
-              </div>
+          <div className="text-center mb-6">
+            <h1 className="text-2xl font-bold ">Filter</h1>
+            <p className="text-gray-700">Filter by status, date, app version</p>
+          </div>
+
           <Form {...form}>
             <form
               // onSubmit={form.handleSubmit(onSubmit)}
               className="grid grid-cols-1 md:grid-cols-2 gap-5"
             >
-             
+
 
               <FormField
                 control={form.control}
@@ -168,6 +173,7 @@ const AllPosDevicesPage = () => {
                     <FormLabel className="">Start Date</FormLabel>
                     <FormControl>
                       <Input
+                        type='date'
                         placeholder="Enter your start date"
                         {...field}
                         className="  placeholder-gray-400 focus:border-amber-500"
@@ -187,6 +193,7 @@ const AllPosDevicesPage = () => {
                     <FormControl>
                       <div className='flex'>
                         <Input
+                          type='date'
                           placeholder="Enter your end date"
                           {...field}
                           className="  placeholder-gray-400 focus:border-amber-500"
@@ -200,7 +207,7 @@ const AllPosDevicesPage = () => {
               />
               <FormField
                 control={form.control}
-                name="end_date"
+                name="appversion"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="">App Version</FormLabel>
@@ -221,7 +228,7 @@ const AllPosDevicesPage = () => {
 
               <Button
                 type="submit"
-                className="w-full bg-[#00aeff] hover:bg-[#3c3c8c] text-white"
+                className="w-full bg-[#00aeff] hover:bg-[#3c3c8c] text-white md:row-start-3 mt-10"
                 disabled={loading}
               >
                 {loading ? (
@@ -231,7 +238,7 @@ const AllPosDevicesPage = () => {
                 )}
               </Button>
 
-             
+
 
             </form>
           </Form>
@@ -246,6 +253,14 @@ const AllPosDevicesPage = () => {
             <p className='text-2xl font-bold'>Point Of Sale Devices</p>
             <p className='text-sm mb-1'>View, edit, delete, existing Point Of Sale Devices</p>
             <Separator />
+          </div>
+          <div className='flex justify-between'>
+            <div>
+            </div>
+            <div className='flex gap-3'>
+              <p className='text-sm font-semibold'>Total Devices:</p>
+              <p className='text-sm font-semibold'>{count}</p>
+            </div>
           </div>
 
           <div className={viewPosDevice || editPosDevice ? 'hidden ' : ''}>

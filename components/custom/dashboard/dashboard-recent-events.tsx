@@ -7,7 +7,6 @@ import { useSession } from 'next-auth/react'
 import { api_endpoints } from '@/utils/api_constants'
 import toast from 'react-hot-toast'
 
-
 type Event = {
   id: string
   title: string
@@ -73,9 +72,9 @@ const DashboardRecentEvents = () => {
 
   return (
     <>
-      <Card>
-        <CardHeader className='font-semibold'>Recent Events</CardHeader>
-        <CardContent className='flex flex-col gap-3'>
+      <Card className='max-h-[350px] '>
+        <CardHeader className='font-semibold '>Recent Events</CardHeader>
+        <CardContent className='flex flex-col gap-3 overflow-y-auto max-h-[250px] pr-2'>
           {events.map((event, index) => (
             <div key={index} className='flex justify-between items-start'>
               <div>

@@ -22,6 +22,7 @@ const AppVersionsPage = () => {
   const [editApp, setEditApp] = useState<AppVersion | null>(null);
   const [deleteApp, setDeleteApp] = useState<AppVersion | null>(null);
   const { data: session, status } = useSession();
+    const [count, setCount] = useState<number | null>(0);
 
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -32,7 +33,6 @@ const AppVersionsPage = () => {
 
 
   const fetchApps = async () => {
-    console.log('first', session?.id)
     const body = {
       page: pagination.pageIndex + 1,
       pageSize: pagination.pageSize,
@@ -47,7 +47,6 @@ const AppVersionsPage = () => {
       body: JSON.stringify(body)
     });
 
-    console.log('first', session?.accessToken)
 
     const responseBody = await response.json();
     if (responseBody["status"] === "success") {
@@ -68,6 +67,7 @@ const AppVersionsPage = () => {
         }))
         setAppData(apps);
         setTotalPages(responseBody.apps.totalPages || 0);
+                setCount(responseBody.apps.count || 0);
 
 
       } // Set the fetched data
@@ -133,6 +133,16 @@ const AppVersionsPage = () => {
             <p className='text-sm mb-1'>View, edit, delete, existing Application Versions</p>
             <Separator />
           </div>
+           <div className='flex justify-between'>
+            <div>
+
+            </div>
+            <div className='flex gap-3'>
+              <p className='text-sm font-semibold'>Total App Versions:</p>
+              <p className='text-sm font-semibold'>{count}</p>
+            </div>
+          </div>
+
 
           <div className={viewApp || editApp ? 'hidden ' : ''}>
             <VersionDataTable

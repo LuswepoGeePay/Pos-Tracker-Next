@@ -34,7 +34,7 @@ const { data: session, status } = useSession();
 
 
   const fetchUsers = async () => {
-      console.log('first', session?.id)
+      
     const body = {
       page: pagination.pageIndex + 1,
       pageSize: pagination.pageSize,
@@ -49,7 +49,7 @@ const { data: session, status } = useSession();
       body: JSON.stringify(body)
     });
 
-    console.log('first', session?.accessToken)
+    
 
     const responseBody = await response.json();
     if (responseBody["status"] === "success") {

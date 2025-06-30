@@ -12,10 +12,11 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { ChevronDown, ChevronUp,  Code,  LucideLayoutDashboard, MapPin, Settings, Shapes, Smartphone, User, User2, Users } from "lucide-react"
+import { Building, ChevronDown, ChevronUp, Code, LucideLayoutDashboard, MapPin, Settings, Shapes, Smartphone, User, User2, Users } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./dropdown-menu"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./collapsible"
 import { signOut } from "next-auth/react"
+import { Separator } from "./separator"
 
 
 const items = [
@@ -24,13 +25,18 @@ const items = [
     url: "/admin/dashboard",
     icon: LucideLayoutDashboard,
   },
- 
-  
+
+
 ]
 
 
 
 const posts = [
+  {
+    title: "Businesses",
+    url: "/admin/business",
+    icon: Building,
+  },
   {
     title: "POS Devices",
     url: "/admin/devices",
@@ -61,28 +67,30 @@ const messages = [
 
 
 const users = [
-   {
+  {
     title: "User Management",
     url: "/admin/users",
     icon: Users,
   },
-   {
+  {
     title: "Profile",
-    url:  "/admin/settings" ,
+    url: "/admin/settings",
     icon: User,
   },
 
 ]
 
 export function AppSidebar() {
-
-  const {
-
-  } = useSidebar()
+  const {} = useSidebar()
   return (
     <Sidebar>
-      <SidebarHeader>
-        <p></p>
+      <SidebarHeader className="flex flex-col items-start">
+        <img
+          src="/images/gpay_logo.png"
+          alt="GeePay"
+          className="w-44"
+        />
+        <Separator />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
@@ -201,7 +209,7 @@ export function AppSidebar() {
                 >
                   <span>Sign out</span>
                 </DropdownMenuItem>
-              
+
               </DropdownMenuContent>
             </DropdownMenu>
           </SidebarMenuItem>

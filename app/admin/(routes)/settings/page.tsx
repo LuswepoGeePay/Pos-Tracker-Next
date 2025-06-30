@@ -8,27 +8,23 @@ const SettingsPage = () => {
   return (
     <main>
       <Card>
-        <CardContent className='flex  gap-3 items-center justify-center'>
+        <CardContent className='flex flex-col md:flex-row gap-3 items-center justify-center'>
 
-          <Avatar  className='h-[200px] w-[200px]'>
-            <AvatarImage 
-            className='h-full w-full'
-            src="https://github.com/shadcn.png" />
+          <Avatar className='h-[200px] w-[200px]'>
+            <AvatarImage
+              className='h-full w-full'
+              src="https://github.com/shadcn.png" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <div className='space-y-2'>
             <p>Your Name</p>
             <p>Your email</p>
             <p>Your role</p>
-            <div className='space-x-6'>
-     <Button>Change Password</Button>
-            <Button>Change Email</Button>
-
+            <div className='space-x-6 md:space-y-6'>
+              <Button>Change Password</Button>
+              <Button>Change Email</Button>
             </div>
-       
           </div>
-
-
         </CardContent>
       </Card>
     </main>

@@ -27,6 +27,8 @@ const AllPosDevicesPage = () => {
   const [editLocation, setEditLocation] = useState<LHistory | null>(null);
   const [deleteLocation, setDeleteLocation] = useState<LHistory | null>(null);
   const { data: session, status } = useSession();
+    const [count, setCount] = useState<number | null>(0);
+  
 
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -66,8 +68,8 @@ const AllPosDevicesPage = () => {
         }))
         setLocationData(locations);
         setTotalPages(responseBody.history.totalPages || 0);
+        setCount(responseBody.history.count || 0)
 
-   console.log('locationData', locationData)
 
       } // Set the fetched data
     }
@@ -129,6 +131,15 @@ const AllPosDevicesPage = () => {
             <p className='text-2xl font-bold'>Locations</p>
             <p className='text-sm mb-1'>View, edit, delete, existing location history entries</p>
             <Separator />
+          </div>
+          <div className='flex justify-between'>
+            <div>
+
+            </div>
+            <div className='flex gap-3'>
+              <p className='text-sm font-semibold'>Total Locations:</p>
+              <p className='text-sm font-semibold'>{count}</p>
+            </div>
           </div>
 
           <div className={viewLocation || editLocation ? 'hidden ' : ''}>

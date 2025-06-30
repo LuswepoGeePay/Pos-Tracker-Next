@@ -1,27 +1,27 @@
 "use client"
-import CreateAppForm from '@/components/custom/forms/apps/create-app-form'
-import { App } from '@/utils/types/Apps'
 import { useSession } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { AppDataTable } from './apps-data-table'
-import { AppColumns } from './apps-columns'
 import toast from 'react-hot-toast'
 import { api_endpoints } from '@/utils/api_constants'
-import ViewAppDialog from '@/components/custom/dialogs/apps/view-app-dialog'
-import EditAppDialog from '@/components/custom/dialogs/apps/edit-app-dialog'
+import { Business } from '@/utils/types/Business'
+import { BusinessDataTable } from './business-data-table'
+import { BusinessColumns } from './business-columns'
+import CreateBusinessForm from '@/components/custom/forms/business/create-business-form'
+import ViewBusinessDialog from '@/components/custom/dialogs/business/view-business-dialog'
+import EditBusinessDialog from '@/components/custom/dialogs/business/edit-business-dialog'
 
 
-const AppsPage = () => {
+const AllBusinessesPage = () => {
 
-  const [appData, setAppData] = useState<App[]>([])
-  const [viewApp, setViewApp] = useState<App | null>(null);
-  const [editApp, setEditApp] = useState<App | null>(null);
-  const [deleteApp, setDeleteApp] = useState<App | null>(null);
-const { data: session, status } = useSession();
+  const [businessData, setbusinessData] = useState<Business[]>([])
+  const [viewBusiness, setViewBusiness] = useState<Business | null>(null);
+  const [editBusiness, setEditBusiness] = useState<Business | null>(null);
+  const [deleteBusiness, setDeleteBusiness] = useState<Business | null>(null);
+  const { data: session, status } = useSession();
 
   const [count, setCount] = useState<number | null>(0);
 
@@ -33,35 +33,39 @@ const { data: session, status } = useSession();
   const [totalPages, setTotalPages] = useState(0);
 
 
-  const fetchApps = async () => {
-      
+  const fetchBusinesss = async () => {
     const body = {
       page: pagination.pageIndex + 1,
       pageSize: pagination.pageSize,
     };
 
-    const response = await fetch(api_endpoints.getApps, {
+    const response = await fetch(api_endpoints.getBusinesses, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "businesslication/json",
         "Authorization": `Bearer ${session?.accessToken}`
       },
       body: JSON.stringify(body)
     });
 
-
-
     const responseBody = await response.json();
     if (responseBody["status"] === "success") {
-      if (responseBody?.apps?.app) {
-        const apps = responseBody.apps.app.map((app: App) => ({
-          id: app.id,
-          description:app.description,
-          name:app.name
+      if (responseBody?.businesss?.business) {
+        const businesss = responseBody.businesss.business.map((business: Business) => ({
+          name: business.name,
+          email: business.email,
+          status: business.status,
+          phone: business.phone,
+          id: business.id,
+          address: business.address
         }))
-        setAppData(apps);
-        setTotalPages(responseBody.apps.totalPages || 0);
-                setCount(responseBody.apps.count || 0);
+
+        
+        setbusinessData(businesss);
+        setTotalPages(responseBody.businesss.totalPages || 0);
+        setCount(responseBody.businesss.count || 0);
+
+
       } // Set the fetched data
     }
     else if (responseBody["status"] == "failure") {
@@ -70,21 +74,21 @@ const { data: session, status } = useSession();
 
 
     else {
-      toast.error("Failed to fetch app data");
+      toast.error("Failed to fetch business data");
     }
 
   }
 
-useEffect(() => {
-  if (status === 'authenticated' && session?.accessToken) {
-    fetchApps();
-  }
-}, [status, session?.accessToken, pagination.pageIndex, pagination.pageSize]);
+  useEffect(() => {
+    if (status === 'authenticated' && session?.accessToken) {
+      fetchBusinesss();
+    }
+  }, [status, session?.accessToken, pagination.pageIndex, pagination.pageSize]);
 
-  const handleDeleteApp = async () => {
-    if (deleteApp) {
+  const handleDeleteBusiness = async () => {
+    if (deleteBusiness) {
       try {
-        const response = await fetch(`${api_endpoints.deleteApp}/${deleteApp.id}`, {
+        const response = await fetch(`${api_endpoints.deleteBusiness}/${deleteBusiness.id}`, {
           method: "DELETE",
           headers: {
             "Authorization": `Bearer ${session?.accessToken}`
@@ -96,7 +100,7 @@ useEffect(() => {
         if (responseBody["status"] === "success") {
           toast.success(responseBody["message"]);
           window.location.reload()
-          fetchApps(); // Refresh the data instead of reloading the page
+          fetchBusinesss(); // Refresh the data instead of reloading the page
         } else {
           toast.error(responseBody["error"]);
         }
@@ -105,7 +109,7 @@ useEffect(() => {
       catch (error) {
         toast.error(`Something went wrong, please try again`);
       } finally {
-        setDeleteApp(null);
+        setDeleteBusiness(null);
       }
     }
   };
@@ -114,33 +118,33 @@ useEffect(() => {
   return (
     <main className='m-10'>
 
-  
-
-      <CreateAppForm />
-
+      <Card>
+        <CardContent>
+          <CreateBusinessForm />
+        </CardContent>
+      </Card>
       <Card className='w-[340px] md:w-full my-20'>
 
         <CardContent className='p-8'>
           <div className='mb-10'>
-            <p className='text-2xl font-bold'>Applications</p>
-            <p className='text-sm mb-1'>View, edit, delete, existing Applications</p>
+            <p className='text-2xl font-bold'>Businesss</p>
+            <p className='text-sm mb-1'>View, edit, delete, existing business history entries</p>
             <Separator />
           </div>
-           <div className='flex justify-between'>
+          <div className='flex justify-between'>
             <div>
 
             </div>
             <div className='flex gap-3'>
-              <p className='text-sm font-semibold'>Total Apps:</p>
+              <p className='text-sm font-semibold'>Total Businesses:</p>
               <p className='text-sm font-semibold'>{count}</p>
             </div>
           </div>
 
-          
-          <div className={viewApp || editApp ? 'hidden ' : ''}>
-            <AppDataTable
-              columns={AppColumns(setViewApp, setEditApp, setDeleteApp)}
-              data={appData} />
+          <div className={viewBusiness || editBusiness ? 'hidden ' : ''}>
+            <BusinessDataTable
+              columns={BusinessColumns(setViewBusiness, setEditBusiness, setDeleteBusiness)}
+              data={businessData} />
 
           </div>
 
@@ -172,28 +176,29 @@ useEffect(() => {
             </Button>
           </div>
 
-          <ViewAppDialog
-            app={viewApp}
-            open={!!viewApp}
-            onClose={() => setViewApp(null)}
-          />
-          <EditAppDialog
-            app={editApp}
-            open={!!editApp}
-            onClose={() => setEditApp(null)}
+          <EditBusinessDialog
+            business={editBusiness}
+            open={!!editBusiness}
+            onClose={() => setEditBusiness(null)}
           />
 
-          <Dialog open={!!deleteApp} onOpenChange={(open) => !open && setDeleteApp(null)}>
+          <ViewBusinessDialog
+            business={viewBusiness}
+            open={!!viewBusiness}
+            onClose={() => setViewBusiness(null)}
+          />
+
+          <Dialog open={!!deleteBusiness} onOpenChange={(open) => !open && setDeleteBusiness(null)}>
             <DialogContent className='w-[350px] md:w-[800px] rounded-lg'>
               <DialogHeader>
                 <DialogTitle>Confirm Deletion</DialogTitle>
               </DialogHeader>
               <p>
-                Are you sure you want to delete this App? This action cannot be undone.
+                Are you sure you want to delete this Business? This action cannot be undone.
               </p>
               <DialogFooter>
-                <Button variant="outline" onClick={() => setDeleteApp(null)}>Cancel</Button>
-                <Button variant="destructive" onClick={handleDeleteApp}>Delete</Button>
+                <Button variant="outline" onClick={() => setDeleteBusiness(null)}>Cancel</Button>
+                <Button variant="destructive" onClick={handleDeleteBusiness}>Delete</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -204,4 +209,4 @@ useEffect(() => {
   )
 }
 
-export default AppsPage
+export default AllBusinessesPage

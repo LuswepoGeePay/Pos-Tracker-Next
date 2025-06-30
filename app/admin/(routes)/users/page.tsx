@@ -24,6 +24,8 @@ const AllUsersPage = () => {
   const [deleteUser, setDeleteUser] = useState<User | null>(null);
   const { data: session, status } = useSession();
   const router = useRouter()
+  const [count, setCount] = useState<number | null>(0);
+
 
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -34,7 +36,7 @@ const AllUsersPage = () => {
 
 
   const fetchUsers = async () => {
-    console.log('first', session?.id)
+    
     const body = {
       page: pagination.pageIndex + 1,
       pageSize: pagination.pageSize,
@@ -49,7 +51,7 @@ const AllUsersPage = () => {
       body: JSON.stringify(body)
     });
 
-    console.log('first', session?.accessToken)
+    
 
     const responseBody = await response.json();
     if (responseBody["status"] === "success") {
@@ -63,8 +65,7 @@ const AllUsersPage = () => {
         }))
         setUserData(users);
         setTotalPages(responseBody.users.totalPages || 0);
-
-
+        setCount(responseBody.users.count || 0)
       } // Set the fetched data
     }
     else if (responseBody["status"] == "failure") {
@@ -129,7 +130,7 @@ const AllUsersPage = () => {
 
               </div>
               <Button
-              onClick={()=>router.push("/admin/users/create")}
+                onClick={() => router.push("/admin/users/create")}
               >
                 Create
               </Button>
@@ -138,6 +139,16 @@ const AllUsersPage = () => {
             <Separator />
           </div>
 
+
+              <div className='flex justify-between'>
+                <div>
+
+                </div>
+                <div className='flex gap-3'>
+                  <p className='text-sm font-semibold'>Total Users:</p>
+                  <p className='text-sm font-semibold'>{count}</p>
+                </div>
+              </div>
 
           <div className={viewUser || editUser ? 'hidden ' : ''}>
             <UserDataTable

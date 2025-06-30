@@ -93,6 +93,10 @@ const SignInForm = () => {
             }
 
             toast.success("Authenticated");
+
+            
+
+            
             router.push("/admin/dashboard");
         }
     }, [status, session]);
