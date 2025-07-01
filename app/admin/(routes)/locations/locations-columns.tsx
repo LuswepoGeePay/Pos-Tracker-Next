@@ -5,7 +5,6 @@ import { DropdownMenuContent, DropdownMenu, DropdownMenuTrigger, DropdownMenuLab
 import { LHistory } from "@/utils/types/PosDevices"
 import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
-import { useRouter } from "next/navigation"
 
 
 

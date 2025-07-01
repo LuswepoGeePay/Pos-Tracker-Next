@@ -18,7 +18,6 @@ import { Separator } from '@/components/ui/separator'
 import { api_endpoints } from '@/utils/api_constants'
 import toast from 'react-hot-toast'
 import { useSession } from 'next-auth/react'
-import { Textarea } from '@/components/ui/textarea'
 import { Business } from '@/utils/types/Business'
 
 const EditBusinessSchema = z.object({

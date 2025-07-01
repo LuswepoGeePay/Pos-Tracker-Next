@@ -19,13 +19,14 @@ type UserActionsProps = {
 
 
 
-const UserActions: React.FC<UserActionsProps> = ({ row, onView, onEdit, onDelete }) => {
+const UserActions: React.FC<UserActionsProps> = ({ row, onEdit, onDelete }) => {
 
     const businessID = row.id
 
     const router = useRouter()
 
     const handleViewUser = async() =>{
+        
         router.push(`/admin/business/${businessID}`)
     }
 

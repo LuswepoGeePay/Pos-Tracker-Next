@@ -98,7 +98,6 @@ declare module "next-auth/jwt" {
                 } 
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars                                      
                 catch (error) {
-                  
                    throw new Error(error instanceof Error ? error.message : "Authentication failed");
     }
             }

@@ -12,7 +12,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { Building, ChevronDown, ChevronUp, Code, LucideLayoutDashboard, MapPin, Settings, Shapes, Smartphone, User, User2, Users } from "lucide-react"
+import { Building, ChevronDown, ChevronUp, Code, LucideLayoutDashboard, MapPin, Shapes, Smartphone, User, User2, Users } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./dropdown-menu"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./collapsible"
 import { signOut } from "next-auth/react"

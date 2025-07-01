@@ -7,17 +7,30 @@ import { useSession } from 'next-auth/react'
 import { api_endpoints } from '@/utils/api_constants'
 import toast from 'react-hot-toast'
 
+type RawEvent = {
+  id: string
+  title: string
+  date: string
+  metadata: string // JSON string
+}
+
 type Event = {
   id: string
   title: string
   date: string
-  metadata: string
+  metadata: Metadata
 }
+
+type Metadata = {
+  app_name?: string
+  description?: string
+}
+
 
 const DashboardRecentEvents = () => {
   const [events, setEvents] = useState<Event[]>([])
   const [open, setOpen] = useState(false)
-  const [selectedMetadata, setSelectedMetadata] = useState<{ app_name?: string; description?: string } | null>(null)
+  const [selectedMetadata, setSelectedMetadata] = useState< Metadata | null>(null)
   const { data: session, status } = useSession()
 
   const fetchEvents = async () => {
@@ -38,10 +51,10 @@ const DashboardRecentEvents = () => {
       const data = await res.json()
 
       if (data.status === 'success') {
-        const formatted = data.events.event.map((e: any) => {
+        const formatted = data.events.event.map((e: RawEvent) => {
           const metadata = JSON.parse(e.metadata)
           return {
-            id: e.event_id,
+            id: e.id,
             title: e.title,
             metadata: metadata,
             date: new Date(e.date).toLocaleString(), // format to readable date
@@ -65,7 +78,7 @@ const DashboardRecentEvents = () => {
     }
   }, [status, session?.accessToken,])
 
-  const handleOpenDialog = (metadata: any) => {
+  const handleOpenDialog = (metadata: Metadata) => {
     setSelectedMetadata(metadata)
     setOpen(true)
   }

@@ -24,7 +24,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from '@/components/ui/input'
-import { Link, Loader2 } from 'lucide-react'
+import {  Loader2 } from 'lucide-react'
 import { format } from 'date-fns'
 const SigninSchema = z.object({
   start_date: z.string().min(1, { message: "Invalid start date " }),
@@ -63,6 +63,8 @@ const AllPosDevicesPage = () => {
 
 
   const fetchPosDevices = async () => {
+
+    setLoading(true)
     
     const body = {
       page: pagination.pageIndex + 1,
@@ -80,6 +82,7 @@ const AllPosDevicesPage = () => {
 
     const responseBody = await response.json();
     if (responseBody["status"] === "success") {
+       setLoading(false)
       if (responseBody?.devices?.posdevice) {
         const posDevices = responseBody.devices.posdevice.map((posDevice: PosDevice) => ({
           id: posDevice.id,
@@ -104,9 +107,11 @@ const AllPosDevicesPage = () => {
       } // Set the fetched data
     }
     else if (responseBody["status"] == "failure") {
+        setLoading(false)
       toast.error(`${responseBody.error}\n${responseBody.detail}`)
     }
     else {
+       setLoading(false)
       toast.error("Failed to fetch posDevice version data");
     }
 
