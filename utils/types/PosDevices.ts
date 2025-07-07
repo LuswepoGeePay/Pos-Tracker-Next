@@ -14,6 +14,8 @@ export type PosDevice = {
     description:string;
     business_name:string;
     fingerprint:string;
+    phone_number1:string;
+    phone_number2:string;
 }
 
 
@@ -26,4 +28,5 @@ export type LHistory = {
     id:string;
     device_name:string;
     region:string;
+    city:string
 }

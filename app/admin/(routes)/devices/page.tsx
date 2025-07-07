@@ -7,43 +7,52 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import toast from 'react-hot-toast'
 import { api_endpoints } from '@/utils/api_constants'
-import { PosDevice } from '@/utils/types/PosDevices'
+import { LHistory, PosDevice } from '@/utils/types/PosDevices'
 import { PosDeviceDataTable } from './devices-data-table'
 import { PosDeviceColumns } from './devices-columns'
 import ViewDeviceDialog from '@/components/custom/dialogs/devices/view-device-dialog'
 import EditDeviceDialog from '@/components/custom/dialogs/devices/edit-device-dialog'
-import z from 'zod'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
-import { Input } from '@/components/ui/input'
-import {  Loader2 } from 'lucide-react'
-import { format } from 'date-fns'
-const SigninSchema = z.object({
-  start_date: z.string().min(1, { message: "Invalid start date " }),
-  end_date: z.string().min(1, { message: "Password is required!" }),
-  appversion: z.string().optional(),
+
+import dynamic from 'next/dynamic'
+
+// Dynamically import DeviceMap with SSR disabled
+const DeviceMap = dynamic(() => import('@/components/custom/common/DeviceMap'), {
+  ssr: false,
 })
+
+// import z from 'zod'
+// import { useForm } from 'react-hook-form'
+// import { zodResolver } from '@hookform/resolvers/zod'
+// import {
+//   Form,
+//   FormControl,
+//   FormField,
+//   FormItem,
+//   FormLabel,
+//   FormMessage,
+// } from "@/components/ui/form"
+// import { Input } from '@/components/ui/input'
+// import { Loader2 } from 'lucide-react'
+import { format } from 'date-fns'
+import { Loader2 } from 'lucide-react'
+// const FilterSchema = z.object({
+//   start_date: z.string().optional(),
+//   end_date: z.string().optional(),
+//   appversion: z.string().optional(),
+// })
 
 
 const AllPosDevicesPage = () => {
 
-  const form = useForm<z.infer<typeof SigninSchema>>({
-    resolver: zodResolver(SigninSchema),
-    defaultValues: {
-      start_date: '',
-      end_date: '',
-      appversion: ""
+  // const form = useForm<z.infer<typeof FilterSchema>>({
+  //   resolver: zodResolver(FilterSchema),
+  //   defaultValues: {
+  //     start_date: '',
+  //     end_date: '',
+  //     appversion: ""
 
-    }
-  })
+  //   }
+  // })
 
   const [loading, setLoading] = useState(false)
 
@@ -53,6 +62,14 @@ const AllPosDevicesPage = () => {
   const [deletePosDevice, setDeletePosDevice] = useState<PosDevice | null>(null);
   const { data: session, status } = useSession();
   const [count, setCount] = useState<number | null>(0);
+  const [selectedLocation, setSelectedLocation] = useState<PosDevice | null>(null);
+  
+
+  // const [startDate, setStartDate] = useState<string | null>(null);
+
+  // const [endDate, setEndDate] = useState<string | null>(null);
+
+  // const [appVersion, setAppVersion] = useState<string | null>(null);
 
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -65,10 +82,12 @@ const AllPosDevicesPage = () => {
   const fetchPosDevices = async () => {
 
     setLoading(true)
-    
+
     const body = {
       page: pagination.pageIndex + 1,
       pageSize: pagination.pageSize,
+      // start_date: startDate,
+      // end_date: endDate
     };
 
     const response = await fetch(api_endpoints.getPosDevices, {
@@ -82,14 +101,14 @@ const AllPosDevicesPage = () => {
 
     const responseBody = await response.json();
     if (responseBody["status"] === "success") {
-       setLoading(false)
+      setLoading(false)
       if (responseBody?.devices?.posdevice) {
         const posDevices = responseBody.devices.posdevice.map((posDevice: PosDevice) => ({
           id: posDevice.id,
           serial_number: posDevice.serial_number,
           current_app_version: posDevice.current_app_version,
-          last_long: posDevice.last_known_longitude,
-          last_lat: posDevice.last_known_latitude,
+          last_known_longitude: posDevice.last_known_longitude,
+          last_known_latitude: posDevice.last_known_latitude,
           status: posDevice.status,
           device_model: posDevice.device_model,
           operating_system: posDevice.operating_system,
@@ -97,9 +116,12 @@ const AllPosDevicesPage = () => {
           description: posDevice.description,
           name: posDevice.name,
           business_name: posDevice.business_name,
-          fingerprint: posDevice.fingerprint
+          fingerprint: posDevice.fingerprint,
+          phone_number1: posDevice.phone_number1,
+          phone_number2: posDevice.phone_number2
         }))
         setPosDeviceData(posDevices);
+        console.log('posDevices', posDevices)
         setTotalPages(responseBody.devices.totalPages || 0);
         setCount(responseBody.devices.count || 0)
 
@@ -107,11 +129,11 @@ const AllPosDevicesPage = () => {
       } // Set the fetched data
     }
     else if (responseBody["status"] == "failure") {
-        setLoading(false)
+      setLoading(false)
       toast.error(`${responseBody.error}\n${responseBody.detail}`)
     }
     else {
-       setLoading(false)
+      setLoading(false)
       toast.error("Failed to fetch posDevice version data");
     }
 
@@ -121,7 +143,7 @@ const AllPosDevicesPage = () => {
     if (status === 'authenticated' && session?.accessToken) {
       fetchPosDevices();
     }
-  }, [status, session?.accessToken, pagination.pageIndex, pagination.pageSize]);
+  }, [status, session?.accessToken, pagination.pageIndex, pagination.pageSize, ]);
 
   const handleDeletePosDevice = async () => {
     if (deletePosDevice) {
@@ -153,10 +175,12 @@ const AllPosDevicesPage = () => {
   };
 
 
+
+
   return (
     <main className='m-10 '>
 
-      <Card>
+      {/* <Card>
         <CardContent>
           <div className="text-center mb-6">
             <h1 className="text-2xl font-bold ">Filter</h1>
@@ -233,7 +257,7 @@ const AllPosDevicesPage = () => {
 
               <Button
                 type="submit"
-                className="w-full bg-[#00aeff] hover:bg-[#3c3c8c] text-white md:row-start-3 mt-10"
+                className="w-full bg-[#00aeff] hover:bg-[#3c3c8c] text-white md:row-start-3 m"
                 disabled={loading}
               >
                 {loading ? (
@@ -243,12 +267,27 @@ const AllPosDevicesPage = () => {
                 )}
               </Button>
 
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full md:row-start-3"
+                onClick={() => {
+                  form.reset();
+                  setStartDate(null);
+                  setEndDate(null);
+                  setAppVersion(null);
+                  setPagination({ pageIndex: 0, pageSize: 20 });
+                }}
+              >
+                Clear Filters
+              </Button>
+
 
 
             </form>
           </Form>
         </CardContent>
-      </Card>
+      </Card> */}
 
 
       <Card className='w-[340px] md:w-full my-20'>
@@ -269,10 +308,16 @@ const AllPosDevicesPage = () => {
           </div>
 
           <div className={viewPosDevice || editPosDevice ? 'hidden ' : ''}>
-            <PosDeviceDataTable
-              columns={PosDeviceColumns(setViewPosDevice, setEditPosDevice, setDeletePosDevice)}
-              data={posDeviceData} />
-
+            {loading ? (
+              <div className="flex justify-center items-center py-10">
+                <Loader2 className="animate-spin h-8 w-8" />
+              </div>
+            ) : (
+              <PosDeviceDataTable
+                columns={PosDeviceColumns(setViewPosDevice, setEditPosDevice, setDeletePosDevice, setSelectedLocation)}
+                data={posDeviceData}
+              />
+            )}
           </div>
 
           <div className="flex items-center justify-end space-x-2 py-4">
@@ -328,6 +373,22 @@ const AllPosDevicesPage = () => {
               </DialogFooter>
             </DialogContent>
           </Dialog>
+
+          <Dialog open={!!selectedLocation} onOpenChange={() => setSelectedLocation(null)}>
+            <DialogContent className="w-[800px] h-[600px]">
+              <DialogHeader>
+                <DialogTitle>Device Location</DialogTitle>
+              </DialogHeader>
+              {selectedLocation && (
+                <DeviceMap
+                  latitude={parseFloat(selectedLocation.last_known_latitude)}
+                  longitude={parseFloat(selectedLocation.last_known_longitude)}
+                  name={"selectedLocation.name"}
+                />
+              )}
+            </DialogContent>
+          </Dialog>
+          
 
         </CardContent>
       </Card>

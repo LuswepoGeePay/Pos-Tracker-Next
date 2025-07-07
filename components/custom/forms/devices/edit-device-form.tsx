@@ -33,6 +33,8 @@ const PosDeviceSchema = z.object({
     operating_system: z.string().optional(),
     description: z.string().optional(),
     business_name: z.string().optional(),
+    number1:z.string().optional(),
+    number2:z.string().optional(),
 })
 
 
@@ -60,7 +62,9 @@ const EditPosDeviceForm: React.FC<EditPosDeviceFormProps> = ({ pos }) => {
             device_model: pos?.device_model,
             operating_system: pos?.operating_system,
             description: pos?.description,
-            business_name: pos?.business_name
+            business_name: pos?.business_name,
+            number1:pos?.phone_number1,
+            number2:pos?.phone_number2
         }
     })
     const onSubmit = async (values: z.infer<typeof PosDeviceSchema>) => {
@@ -77,7 +81,9 @@ const EditPosDeviceForm: React.FC<EditPosDeviceFormProps> = ({ pos }) => {
             device_model: values.device_model,
             operating_system: values.operating_system,
             description: values.description,
-            business_name: values.business_name
+            business_name: values.business_name,
+            phone_number1:values.number1,
+            phone_number2: values.number2
          }
 
 
@@ -159,6 +165,7 @@ const EditPosDeviceForm: React.FC<EditPosDeviceFormProps> = ({ pos }) => {
                             </FormItem>
                         )}
                     />
+
                     <FormField
                         control={form.control}
                         name="current_app_version"
@@ -166,7 +173,40 @@ const EditPosDeviceForm: React.FC<EditPosDeviceFormProps> = ({ pos }) => {
                             <FormItem>
                                 <FormLabel>Current App Version</FormLabel>
                                 <FormControl>
-                                    <Input type="text" placeholder="" {...field} />
+                                    <Input 
+                                    type="text" 
+                                
+                                    placeholder="" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="number1"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Phone Number 1</FormLabel>
+                                <FormControl>
+                                    <Input
+                                         type="number" 
+                                         placeholder="" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="number2"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Phone Number 2</FormLabel>
+                                <FormControl>
+                                    <Input
+                                         type="number" 
+                                         placeholder="" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -179,7 +219,9 @@ const EditPosDeviceForm: React.FC<EditPosDeviceFormProps> = ({ pos }) => {
                             <FormItem>
                                 <FormLabel>Last known Latitude</FormLabel>
                                 <FormControl>
-                                    <Input type="text" placeholder="" {...field} />
+                                    <Input type="text" 
+                                    disabled
+                                    placeholder="" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -192,7 +234,10 @@ const EditPosDeviceForm: React.FC<EditPosDeviceFormProps> = ({ pos }) => {
                             <FormItem>
                                 <FormLabel>Last Known Longitude</FormLabel>
                                 <FormControl>
-                                    <Input type="text" placeholder="" {...field} />
+                                    <Input
+                                        disabled
+                                         type="text" 
+                                         placeholder="" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

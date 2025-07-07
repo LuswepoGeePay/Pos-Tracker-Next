@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { DropdownMenuContent, DropdownMenu, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { LHistory } from "@/utils/types/PosDevices"
-import { ColumnDef } from "@tanstack/react-table"
+import { ColumnDef, Row } from "@tanstack/react-table"
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
 
 
@@ -13,12 +13,13 @@ type UserActionsProps = {
     onView: (LHistory: LHistory) => void;
     onEdit: (LHistory: LHistory) => void;
     onDelete: (LHistory: LHistory) => void;
+    onViewMap: (LHistory: LHistory) => void;
 
 };
 
 
 
-const UserActions: React.FC<UserActionsProps> = ({ row, onView, onEdit, onDelete }) => {
+const UserActions: React.FC<UserActionsProps> = ({ row,  onViewMap, onView, onEdit, onDelete }) => {
 
 
     return (
@@ -33,8 +34,8 @@ const UserActions: React.FC<UserActionsProps> = ({ row, onView, onEdit, onDelete
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-
-                    <DropdownMenuItem onClick={() => onView(row)}>View</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => onViewMap(row)}>View on Map</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => onView(row)}>View Details</DropdownMenuItem>
                     <DropdownMenuItem className="hidden" onClick={() => onEdit(row)}>Edit</DropdownMenuItem>
 
                     <DropdownMenuItem className="hidden" onClick={() => onDelete(row)}>Delete</DropdownMenuItem>
@@ -49,21 +50,24 @@ const UserActions: React.FC<UserActionsProps> = ({ row, onView, onEdit, onDelete
 
 
 
-// const DescriptionCell = ({ row }: { row: Row<LHistory> }) => {
-//     const description = row.original
-//     return (
-//         <>
-//             <div className="max-h-[100px] overflow-hidden text-ellipsis">
-//                 {/* <p className="line-clamp-3">{description.release_notes}</p> */}
-//             </div>
-//         </>
-//     )
-// }
+const LocationCell = ({ row }: { row: Row<LHistory> }) => {
+    const location = row.original
+    return (
+        <>
+           <div className="flex gap-2">
+            <p>{location.region}{","}</p>
+            <p>{location.city}</p>
+
+           </div>
+        </>
+    )
+}
 
 export const LocationColumns = (
     setViewUser: (LHistory: LHistory | null) => void,
     setEditUser: (LHistory: LHistory | null) => void,
     onDelete: (LHistory: LHistory) => void,
+     onViewMap: (LHistory: LHistory) => void
 
 ): ColumnDef<LHistory>[] => [
         {
@@ -96,7 +100,9 @@ export const LocationColumns = (
         },
         {
             accessorKey: "region",
-            header: "Region"
+            header: "Location",
+            cell: LocationCell
+
         },
         {
             accessorKey: "timestamp",
@@ -113,6 +119,7 @@ export const LocationColumns = (
                     onView={setViewUser}
                     onEdit={setEditUser}
                     onDelete={onDelete}
+                       onViewMap={onViewMap}
 
                 />
             ),

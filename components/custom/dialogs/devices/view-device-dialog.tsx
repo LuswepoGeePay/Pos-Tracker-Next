@@ -38,6 +38,16 @@ const ViewDeviceDialog: React.FC<ViewDeviceDialogProps> = ({ pos, open, onClose 
             <p>{pos.current_app_version}</p>
           </div>
 
+ <div>
+            <p className="font-semibold text-lg">Phone Number 1</p>
+            <p>{pos.phone_number1}</p>
+          </div>
+
+ <div>
+            <p className="font-semibold text-lg">Pjone Number 2</p>
+            <p>{pos.phone_number2}</p>
+          </div>
+
           <div>
             <p className="font-semibold text-lg">Operating System</p>
             <p>{pos.operating_system}</p>

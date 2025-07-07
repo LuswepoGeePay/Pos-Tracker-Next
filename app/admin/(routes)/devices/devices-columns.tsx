@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { DropdownMenuContent, DropdownMenu, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { PosDevice } from "@/utils/types/PosDevices"
+import { LHistory } from "@/utils/types/PosDevices"
 import { ColumnDef, Row } from "@tanstack/react-table"
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
 
@@ -13,12 +14,13 @@ type UserActionsProps = {
     onView: (PosDevice: PosDevice) => void;
     onEdit: (PosDevice: PosDevice) => void;
     onDelete: (PosDevice: PosDevice) => void;
+    onViewMap: (PosDevice: PosDevice) => void;
   
 };
 
 
 
-const UserActions: React.FC<UserActionsProps> = ({ row, onView, onEdit, onDelete }) => {
+const UserActions: React.FC<UserActionsProps> = ({ row, onView, onViewMap, onEdit, onDelete }) => {
     
     return (
         <>
@@ -32,10 +34,10 @@ const UserActions: React.FC<UserActionsProps> = ({ row, onView, onEdit, onDelete
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-              
+                     <DropdownMenuItem onClick={() => onViewMap(row)}>View on Map</DropdownMenuItem>
+    
                     <DropdownMenuItem onClick={() => onView(row)}>View</DropdownMenuItem>
                     <DropdownMenuItem onClick={() => onEdit(row)}>Edit</DropdownMenuItem>
-                    
                     <DropdownMenuItem onClick={() => onDelete(row)}>Delete</DropdownMenuItem>
                    
                 </DropdownMenuContent>
@@ -74,6 +76,7 @@ export const PosDeviceColumns = (
     setViewUser: (PosDevice: PosDevice | null) => void,
     setEditUser: (PosDevice: PosDevice | null) => void,
     onDelete: (PosDevice: PosDevice) => void,
+     onViewMap: (PosDevice: PosDevice) => void
   
 ): ColumnDef<PosDevice>[] => [
         {
@@ -111,22 +114,21 @@ export const PosDeviceColumns = (
 
        
         {
-            accessorKey: "last_long",
-            header: "Last known longitude",
+            accessorKey: "phone_number1",
+            header: "Phone Number 1",
        
         },
         
          {
-            accessorKey: "last_lat",
-              header: "Last known latitude",
+            accessorKey: "phone_number2",
+              header: "Phone Number 2",
         },
 
          {
             accessorKey: "loc_last",
               header: "Location last updated",
         },
-         
-
+        
         {
             id: "Actions",
             header: "Actions",
@@ -136,6 +138,7 @@ export const PosDeviceColumns = (
                     onView={setViewUser}
                     onEdit={setEditUser}
                     onDelete={onDelete}
+                      onViewMap={onViewMap}
                  
                 />
             ),

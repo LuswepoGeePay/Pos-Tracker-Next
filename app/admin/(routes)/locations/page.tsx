@@ -9,16 +9,17 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import toast from 'react-hot-toast'
 import { api_endpoints } from '@/utils/api_constants'
-// import ViewAppDialog from '@/components/custom/dialogs/locations/view-location-dialog'
-// import EditAppDialog from '@/components/custom/dialogs/locations/edit-location-dialog'
-// import EditLHistoryDialog from '@/components/custom/dialogs/locationvs/edit-version-dialog'
-// import ViewLHistoryDialog from '@/components/custom/dialogs/locationvs/view-version-dialog'
 import { format } from 'date-fns'
 import { LHistory } from '@/utils/types/PosDevices'
 import { LocationDataTable } from './locations-data-table'
 import { LocationColumns } from './locations-columns'
 import ViewLHistoryDialog from '@/components/custom/dialogs/locations/view-device-dialog'
+import dynamic from 'next/dynamic'
 
+// Dynamically import DeviceMap with SSR disabled
+const DeviceMap = dynamic(() => import('@/components/custom/common/DeviceMap'), {
+  ssr: false,
+})
 
 const AllPosDevicesPage = () => {
 
@@ -28,6 +29,8 @@ const AllPosDevicesPage = () => {
   const [deleteLocation, setDeleteLocation] = useState<LHistory | null>(null);
   const { data: session, status } = useSession();
     const [count, setCount] = useState<number | null>(0);
+    const [selectedLocation, setSelectedLocation] = useState<LHistory | null>(null);
+
   
 
   const [pagination, setPagination] = useState({
@@ -64,7 +67,8 @@ const AllPosDevicesPage = () => {
           accuracy: location.accuracy,
           timestamp: format(location.timestamp, "MMMM dd yyyy, HH:mm"),
           name:location.device_name,
-          region:location.region
+          region:location.region,
+          city:location.city
         }))
         setLocationData(locations);
         setTotalPages(responseBody.history.totalPages || 0);
@@ -144,7 +148,7 @@ const AllPosDevicesPage = () => {
 
           <div className={viewLocation || editLocation ? 'hidden ' : ''}>
             <LocationDataTable
-              columns={LocationColumns(setViewLocation, setEditLocation, setDeleteLocation)}
+              columns={LocationColumns(setViewLocation, setEditLocation, setDeleteLocation,  setSelectedLocation)}
               data={locationData} />
 
           </div>
@@ -197,6 +201,23 @@ const AllPosDevicesPage = () => {
               </DialogFooter>
             </DialogContent>
           </Dialog>
+
+
+<Dialog open={!!selectedLocation} onOpenChange={() => setSelectedLocation(null)}>
+  <DialogContent className="w-[800px] h-[600px]">
+    <DialogHeader>
+      <DialogTitle>Device Location</DialogTitle>
+    </DialogHeader>
+    {selectedLocation && (
+      <DeviceMap
+        latitude={parseFloat(selectedLocation.latitude)}
+        longitude={parseFloat(selectedLocation.longitude)}
+        name={"selectedLocation.name"}
+      />
+    )}
+  </DialogContent>
+</Dialog>
+
 
         </CardContent>
       </Card>
