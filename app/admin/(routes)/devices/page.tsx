@@ -7,7 +7,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import toast from 'react-hot-toast'
 import { api_endpoints } from '@/utils/api_constants'
-import { LHistory, PosDevice } from '@/utils/types/PosDevices'
+import {  PosDevice } from '@/utils/types/PosDevices'
 import { PosDeviceDataTable } from './devices-data-table'
 import { PosDeviceColumns } from './devices-columns'
 import ViewDeviceDialog from '@/components/custom/dialogs/devices/view-device-dialog'
@@ -34,7 +34,7 @@ const DeviceMap = dynamic(() => import('@/components/custom/common/DeviceMap'), 
 // import { Input } from '@/components/ui/input'
 // import { Loader2 } from 'lucide-react'
 import { format } from 'date-fns'
-import { BatteryCharging, Loader2, PowerOff, Smartphone } from 'lucide-react'
+import { BatteryCharging, PowerOff, Smartphone } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
 // const FilterSchema = z.object({
 //   start_date: z.string().optional(),

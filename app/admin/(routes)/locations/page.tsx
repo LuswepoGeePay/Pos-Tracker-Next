@@ -83,7 +83,7 @@ const AllPosDevicesPage = () => {
         toast.error(`${responseBody.error}\n${responseBody.detail}`);
       }
     } catch (err) {
-      setError('Failed to fetch location data.');
+      setError(`Failed to fetch location data. ${err}`);
       toast.error('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
@@ -115,7 +115,7 @@ const AllPosDevicesPage = () => {
           toast.error(responseBody.error);
         }
       } catch (error) {
-        toast.error('Something went wrong, please try again');
+        toast.error(`Something went wrong, please try again ${error}`);
       } finally {
         setDeleteLocation(null);
       }

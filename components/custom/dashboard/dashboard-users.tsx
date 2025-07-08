@@ -73,7 +73,7 @@ const [error, setError] = useState<string | null>(null);
       toast.error(`${responseBody.error}\n${responseBody.detail}`);
     }
   } catch (error) {
-    setError("Failed to fetch user data");
+    setError(`Failed to fetch user data ${error}`);
     toast.error("Something went wrong, try again.");
   } finally {
     setLoading(false);

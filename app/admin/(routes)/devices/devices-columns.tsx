@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button"
 import { DropdownMenuContent, DropdownMenu, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { PosDevice } from "@/utils/types/PosDevices"
-import { LHistory } from "@/utils/types/PosDevices"
 import { ColumnDef, Row } from "@tanstack/react-table"
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
 

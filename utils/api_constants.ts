@@ -1,12 +1,12 @@
 //local
 
-export const base_url = "http://localhost:8050/v1";
-export const login_url = "http://localhost:8050/v1";
+// export const base_url = "http://localhost:8050/v1";
+// export const login_url = "http://localhost:8050/v1";
 
 //production
 
-// export const base_url = "https://pos-tracker.geepay.tech/v1";
-// export const login_url = "https://pos-tracker.geepay.tech/v1";
+export const base_url = "https://pos-tracker.geepay.tech/v1";
+export const login_url = "https://pos-tracker.geepay.tech/v1";
 export const domain_name = "pos-tracker.geepay.tech"
 export const metaDataUrl ="https://pos-tracker.geepay.tech";
 

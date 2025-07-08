@@ -8,11 +8,11 @@ import { useSession } from 'next-auth/react';
 import { api_endpoints } from '@/utils/api_constants';
 import toast from 'react-hot-toast';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 
 const SettingsPage = () => {
   const { data: session, status } = useSession();
-  const router = useRouter()
+  // const router = useRouter()
 
   const [userData, setUserData] = useState({
     fullname: '',
@@ -102,10 +102,10 @@ const SettingsPage = () => {
                 <p>{userData.status ? 'Active' : 'Inactive'}</p>
                 <div className="md:space-x-6 space-y-6 ">
                   <Button
-                  onClick={()=> router.push(`/admin/settings/password/${userData.id}`)}
+                  // onClick={()=> router.push(`/admin/settings/password/${userData.id}`)}
                   >Change Password</Button>
                   <Button
-                   onClick={()=> router.push(`/admin/settings/email/${userData.id}`)}
+                  //  onClick={()=> router.push(`/admin/settings/email/${userData.id}`)}
                  
                   >Change Email</Button>
                 </div>
