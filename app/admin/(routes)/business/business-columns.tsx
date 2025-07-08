@@ -72,10 +72,7 @@ export const BusinessColumns = (
     onDelete: (Business: Business) => void,
 
 ): ColumnDef<Business>[] => [
-        {
-            accessorKey: "name",
-            header: "Business name",
-        },
+        
         {
             accessorKey: "name",
             header: ({ column }) => {
@@ -84,7 +81,7 @@ export const BusinessColumns = (
                         variant="ghost"
                         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                     >
-                         Name
+                         Business name
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 )

@@ -18,6 +18,7 @@ export const api_endpoints = {
     resetPassword: `${base_url}/password/reset`,
 
 
+
     //create
     createAppVersion: `${base_url}/app/version/register`,
     createUser: `${login_url}/create-user`,
@@ -41,7 +42,7 @@ export const api_endpoints = {
     getDashboardTileInfo: `${base_url}/dashboard/tiles/get`,
     getEvents: `${base_url}/dashboard/events/get`,
     getLocations: `${base_url}/locations/get`,
-    getTestimonies: `${base_url}/get-testimonies`,
+    getUserInfo: `${base_url}/user/get/`,
     getTestimoniesPortal: `${base_url}/get-testimonies-portal`,
     getStreams:`${base_url}/get-streams`,
     getUsers:`${base_url}/users/get`,

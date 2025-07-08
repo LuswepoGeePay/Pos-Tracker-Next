@@ -15,6 +15,7 @@ import { UserDataTable } from '@/app/admin/(routes)/users/users-data-table'
 import { UserColumns } from '@/app/admin/(routes)/users/users-columns'
 import ViewUserDialog from '../dialogs/users/view-user-dialog'
 import EditUserDialog from '../dialogs/users/edit-user-dialog'
+import { Skeleton } from '@/components/ui/skeleton'
 
 
 const DashboardUsers = () => {
@@ -24,6 +25,9 @@ const DashboardUsers = () => {
   const [editUser, setEditUser] = useState<User | null>(null);
   const [deleteUser, setDeleteUser] = useState<User | null>(null);
 const { data: session, status } = useSession();
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState<string | null>(null);
+
 
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -34,7 +38,10 @@ const { data: session, status } = useSession();
 
 
   const fetchUsers = async () => {
-      
+  setLoading(true);
+  setError(null);
+
+  try {
     const body = {
       page: pagination.pageIndex + 1,
       pageSize: pagination.pageSize,
@@ -44,39 +51,35 @@ const { data: session, status } = useSession();
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${session?.accessToken}`
+        Authorization: `Bearer ${session?.accessToken}`,
       },
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
     });
 
-    
-
     const responseBody = await response.json();
-    if (responseBody["status"] === "success") {
-      if (responseBody?.users?.user) {
-        const users = responseBody.users.user.map((user: User) => ({
-          id: user.id,
-          fullname:user.fullname,
-          role:user.role,
-          status:user.status ?? false,
-          email:user.email
-        }))
-        setUserData(users);
-        setTotalPages(responseBody.users.totalPages || 0);
 
-       
-      } // Set the fetched data
+    if (responseBody.status === "success") {
+      const users = responseBody.users.user.map((user: User) => ({
+        id: user.id,
+        fullname: user.fullname,
+        role: user.role,
+        status: user.status ?? false,
+        email: user.email,
+      }));
+      setUserData(users);
+      setTotalPages(responseBody.users.totalPages || 0);
+    } else {
+      setError(`${responseBody.error}\n${responseBody.detail}`);
+      toast.error(`${responseBody.error}\n${responseBody.detail}`);
     }
-    else if (responseBody["status"] == "failure") {
-      toast.error(`${responseBody.error}\n${responseBody.detail}`)
-    }
-
-
-    else {
-      toast.error("Failed to fetch user version data");
-    }
-
+  } catch (error) {
+    setError("Failed to fetch user data");
+    toast.error("Something went wrong, try again.");
+  } finally {
+    setLoading(false);
   }
+};
+
 
 useEffect(() => {
   if (status === 'authenticated' && session?.accessToken) {
@@ -127,12 +130,19 @@ useEffect(() => {
             <Separator />
           </div>
           
-          <div className={viewUser || editUser ? 'hidden ' : ''}>
-            <UserDataTable
-              columns={UserColumns(setViewUser, setEditUser, setDeleteUser)}
-              data={userData} />
+          <div className={viewUser || editUser ? 'hidden' : ''}>
+  {loading ? (
+    <Skeleton className="w-full h-[200px]" />
+  ) : error ? (
+    <p className="text-red-500 text-center">{error}</p>
+  ) : (
+    <UserDataTable
+      columns={UserColumns(setViewUser, setEditUser, setDeleteUser)}
+      data={userData}
+    />
+  )}
+</div>
 
-          </div>
 
           <div className="flex items-center justify-end space-x-2 py-4">
             <Button

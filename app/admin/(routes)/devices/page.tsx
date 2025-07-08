@@ -34,7 +34,8 @@ const DeviceMap = dynamic(() => import('@/components/custom/common/DeviceMap'), 
 // import { Input } from '@/components/ui/input'
 // import { Loader2 } from 'lucide-react'
 import { format } from 'date-fns'
-import { Loader2 } from 'lucide-react'
+import { BatteryCharging, Loader2, PowerOff, Smartphone } from 'lucide-react'
+import { Skeleton } from '@/components/ui/skeleton'
 // const FilterSchema = z.object({
 //   start_date: z.string().optional(),
 //   end_date: z.string().optional(),
@@ -54,16 +55,25 @@ const AllPosDevicesPage = () => {
   //   }
   // })
 
-  const [loading, setLoading] = useState(false)
-
   const [posDeviceData, setPosDeviceData] = useState<PosDevice[]>([])
   const [viewPosDevice, setViewPosDevice] = useState<PosDevice | null>(null);
   const [editPosDevice, setEditPosDevice] = useState<PosDevice | null>(null);
   const [deletePosDevice, setDeletePosDevice] = useState<PosDevice | null>(null);
-  const { data: session, status } = useSession();
+  const {data: session, status } = useSession();
   const [count, setCount] = useState<number | null>(0);
   const [selectedLocation, setSelectedLocation] = useState<PosDevice | null>(null);
-  
+  const [loading, setLoading] = useState(true);
+const [error, setError] = useState<string | null>(null);
+    const [tileData, setTileData] = useState({
+    pos_devices: 0,
+    active_devices: 0,
+    offline_devices: 0,
+    apps: 0,
+    app_version: 'N/A',
+    new_locations: 0, // assuming you add this later
+  })
+
+
 
   // const [startDate, setStartDate] = useState<string | null>(null);
 
@@ -121,27 +131,58 @@ const AllPosDevicesPage = () => {
           phone_number2: posDevice.phone_number2
         }))
         setPosDeviceData(posDevices);
-        console.log('posDevices', posDevices)
         setTotalPages(responseBody.devices.totalPages || 0);
         setCount(responseBody.devices.count || 0)
 
 
-      } // Set the fetched data
+      } 
     }
     else if (responseBody["status"] == "failure") {
       setLoading(false)
+      setError(`${responseBody.error}\n${responseBody.detail}`);
       toast.error(`${responseBody.error}\n${responseBody.detail}`)
     }
     else {
       setLoading(false)
-      toast.error("Failed to fetch posDevice version data");
+      toast.error("Failed to fetch devices data");
+       setError("Failed to fetch devices data");
     }
 
   }
 
+  
+  const fetchTileInfo = async () => {
+    try {
+      const res = await fetch(api_endpoints.getDashboardTileInfo,  {
+      headers: {
+        "Authorization": `Bearer ${session?.accessToken}`
+      },}) 
+      const data = await res.json()
+
+      console.log('data', data)
+
+      if (data.status === 'success') {
+        setTileData({
+          pos_devices: data.info.pos_devices ?? 0,
+          active_devices: data.info.active_devices ?? 0,
+          offline_devices: data.info.offline_devices  ?? 0,
+          apps: data.info.apps,
+          app_version: data.info.app_version,
+          new_locations: data.locations_tracked ?? 0, // hardcoded for now
+        })
+      } else if(data.status == "failure"){
+        toast.error("Unable to fetch dashboard information.")
+      }
+    } catch (err) {
+      console.error('Failed to fetch dashboard info:', err)
+    }
+  }
+
+
   useEffect(() => {
     if (status === 'authenticated' && session?.accessToken) {
       fetchPosDevices();
+      fetchTileInfo();
     }
   }, [status, session?.accessToken, pagination.pageIndex, pagination.pageSize, ]);
 
@@ -289,6 +330,46 @@ const AllPosDevicesPage = () => {
         </CardContent>
       </Card> */}
 
+<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5'>
+  <Card className='border-5 border-l-blue-500 border-r-0 border-b-0 border-t-0'>
+    <CardContent className='flex justify-between items-center'>
+      
+     <div>
+       <p>All Devices</p>
+      <p>{ tileData.pos_devices}</p>
+     </div>
+     <Smartphone className='text-blue-500'/>
+
+
+    </CardContent>
+  </Card>
+   <Card className='border-5 border-l-green-500 border-r-0 border-b-0 border-t-0'>
+    <CardContent className='flex justify-between items-center'>
+      
+      <div>
+          <p>Active Devices</p>
+      <p>{tileData.active_devices}</p>
+
+      </div>
+    
+    <BatteryCharging className='text-green-500'/>
+
+
+    </CardContent>
+  </Card>
+    <Card className='border-5 border-l-red-500 border-r-0 border-b-0 border-t-0'>
+    <CardContent className='flex justify-between items-center'>
+      
+    <div>
+        <p>Inactive Devices</p>
+      <p>{tileData.offline_devices}</p>
+    </div>
+    <PowerOff  className='text-red-500'/>
+
+
+    </CardContent>
+  </Card>
+</div>
 
       <Card className='w-[340px] md:w-full my-20'>
 
@@ -307,18 +388,20 @@ const AllPosDevicesPage = () => {
             </div>
           </div>
 
-          <div className={viewPosDevice || editPosDevice ? 'hidden ' : ''}>
-            {loading ? (
-              <div className="flex justify-center items-center py-10">
-                <Loader2 className="animate-spin h-8 w-8" />
-              </div>
-            ) : (
-              <PosDeviceDataTable
+         
+          <div  className={viewPosDevice || editPosDevice ? 'hidden ' : ''}>
+  {loading ? (
+    <Skeleton className="w-full h-[200px]" />
+  ) : error ? (
+    <p className="text-red-500 text-center">{error}</p>
+  ) : (
+   <PosDeviceDataTable
                 columns={PosDeviceColumns(setViewPosDevice, setEditPosDevice, setDeletePosDevice, setSelectedLocation)}
                 data={posDeviceData}
               />
-            )}
-          </div>
+  )}
+</div>
+
 
           <div className="flex items-center justify-end space-x-2 py-4">
             <Button
