@@ -16,6 +16,7 @@ export type PosDevice = {
     fingerprint:string;
     phone_number1:string;
     phone_number2:string;
+    
 }
 
 

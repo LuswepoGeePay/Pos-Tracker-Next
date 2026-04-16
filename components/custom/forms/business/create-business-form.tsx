@@ -24,10 +24,14 @@ const CreateBusinessSchema = z.object({
     email: z.string().email().min(1, {message:"Email is required"}),
     address: z.string().min(1, { message: "Business address is required" }),
     phone: z.string().min(1, { message: "Build Number is required" }),
-    logo: z.instanceof(File).optional().refine((file) => {
-        return !file || (file && file.size <= 10 * 1024 * 1024);
-    }, "File must be under 10mb"),
-})
+    logo: z
+      .any()
+      .optional()
+      .refine((file) => {
+        return !file || (file instanceof File && file.size <= 10 * 1024 * 1024);
+      }, "File must be under 10mb"),
+  });
+
 
 const CreateBusinessForm = () => {
 

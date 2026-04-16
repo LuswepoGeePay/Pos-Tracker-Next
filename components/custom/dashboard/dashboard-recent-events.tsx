@@ -177,14 +177,15 @@ const DashboardRecentEvents = () => {
     setLoading(true);
     setError(null);
     try {
-      const body = { page: 1, pageSize: 10 };
+      const queryParams = new URLSearchParams({
+        page: '1',
+        pageSize: '10',
+      });
 
-      const res = await fetch(api_endpoints.getEvents, {
-        method: 'POST',
+      const res = await fetch(`${api_endpoints.getEvents}?${queryParams}`, {
         headers: {
           Authorization: `Bearer ${session?.accessToken}`,
         },
-        body: JSON.stringify(body),
       });
 
       const data = await res.json();

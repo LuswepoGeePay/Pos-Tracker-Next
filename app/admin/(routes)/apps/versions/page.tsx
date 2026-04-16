@@ -38,13 +38,15 @@ const AppVersionsPage = () => {
       pageSize: pagination.pageSize,
     };
 
-    const response = await fetch(api_endpoints.getAppVersions, {
-      method: "POST",
+    const queryParams = new URLSearchParams({
+      page: String(pagination.pageIndex + 1),
+      pageSize: String(pagination.pageSize),
+    });
+
+    const response = await fetch(`${api_endpoints.getAppVersions}?${queryParams}`, {
       headers: {
-        "Content-Type": "application/json",
         "Authorization": `Bearer ${session?.accessToken}`
-      },
-      body: JSON.stringify(body)
+      }
     });
 
 

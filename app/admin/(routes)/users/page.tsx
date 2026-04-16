@@ -37,18 +37,15 @@ const AllUsersPage = () => {
 
   const fetchUsers = async () => {
     
-    const body = {
-      page: pagination.pageIndex + 1,
-      pageSize: pagination.pageSize,
-    };
+    const queryParams = new URLSearchParams({
+      page: String(pagination.pageIndex + 1),
+      pageSize: String(pagination.pageSize),
+    });
 
-    const response = await fetch(api_endpoints.getUsers, {
-      method: "POST",
+    const response = await fetch(`${api_endpoints.getUsers}?${queryParams}`, {
       headers: {
-        "Content-Type": "application/json",
         "Authorization": `Bearer ${session?.accessToken}`
-      },
-      body: JSON.stringify(body)
+      }
     });
 
     

@@ -39,13 +39,15 @@ const AllBusinessesPage = () => {
       pageSize: pagination.pageSize,
     };
 
-    const response = await fetch(api_endpoints.getBusinesses, {
-      method: "POST",
+    const queryParams = new URLSearchParams({
+      page: String(pagination.pageIndex + 1),
+      pageSize: String(pagination.pageSize),
+    });
+
+    const response = await fetch(`${api_endpoints.getBusinesses}?${queryParams}`, {
       headers: {
-        "Content-Type": "businesslication/json",
         "Authorization": `Bearer ${session?.accessToken}`
-      },
-      body: JSON.stringify(body)
+      }
     });
 
     const responseBody = await response.json();

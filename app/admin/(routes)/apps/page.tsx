@@ -40,13 +40,15 @@ const { data: session, status } = useSession();
       pageSize: pagination.pageSize,
     };
 
-    const response = await fetch(api_endpoints.getApps, {
-      method: "POST",
+    const queryParams = new URLSearchParams({
+      page: String(pagination.pageIndex + 1),
+      pageSize: String(pagination.pageSize),
+    });
+
+    const response = await fetch(`${api_endpoints.getApps}?${queryParams}`, {
       headers: {
-        "Content-Type": "application/json",
         "Authorization": `Bearer ${session?.accessToken}`
-      },
-      body: JSON.stringify(body)
+      }
     });
 
 
