@@ -1,14 +1,14 @@
 //local
 
-export const base_url = "http://localhost:8050/v1";
-export const login_url = "http://localhost:8050/v1";
+// export const base_url = "http://localhost:8050/v1";
+// export const login_url = "http://localhost:8050/v1";
 
 //production
 
-// export const base_url = "https://pos-tracker.geepay.tech/v1";
-// export const login_url = "https://pos-tracker.geepay.tech/v1";
+export const base_url = "https://pos-tracker.geepay.tech/v1";
+export const login_url = "https://pos-tracker.geepay.tech/v1";
 export const domain_name = "pos-tracker.geepay.tech"
-export const metaDataUrl ="https://pos-tracker.geepay.tech";
+export const metaDataUrl = "https://pos-tracker.geepay.tech";
 
 export const api_endpoints = {
     //auth
@@ -44,17 +44,17 @@ export const api_endpoints = {
     getLocations: `${base_url}/locations/get`,
     getUserInfo: `${base_url}/user/get/`,
     getTestimoniesPortal: `${base_url}/get-testimonies-portal`,
-    getStreams:`${base_url}/get-streams`,
-    getUsers:`${base_url}/users/get`,
+    getStreams: `${base_url}/get-streams`,
+    getUsers: `${base_url}/users/get`,
     getDashboardCardInfo: `${base_url}/dashboard/info`,
     getDashboardActivity: `${base_url}/dashboard/activity`,
     getDashboardPodcasts: `${base_url}/dashboard/podcasts`,
 
-    
+
     //Update
     editPosDevice: `${base_url}/pos/device/update`,
-    
-    editAppVersion:   `${base_url}/app/version/update`,
+
+    editAppVersion: `${base_url}/app/version/update`,
     editUser: `${base_url}/user/update`,
     editBusiness: `${base_url}/business/update`,
     editEvent: `${base_url}/edit-event`,
@@ -62,8 +62,8 @@ export const api_endpoints = {
     editPodcast: `${base_url}/edit-podcast`,
     editApp: `${base_url}/app/info/update`,
     editZone: `${base_url}/edit-zone`,
-    editLive:`${base_url}/edit-stream`,
-    editDiary:`${base_url}/edit-diary`,
+    editLive: `${base_url}/edit-stream`,
+    editDiary: `${base_url}/edit-diary`,
     incrementPodcast: `${base_url}/podcast/increment`,
 
     //delete
@@ -78,6 +78,6 @@ export const api_endpoints = {
     deleteApp: `${base_url}/app`,
     deleteLocation: `${base_url}/location/delete`,
     deleteBusiness: `${base_url}/delete-podcast`,
-    deleteAppVersion:`${base_url}/delete-stream`,
-    deletePosDevice:`${base_url}/pos/device`,
+    deleteAppVersion: `${base_url}/delete-stream`,
+    deletePosDevice: `${base_url}/pos/device`,
 };
