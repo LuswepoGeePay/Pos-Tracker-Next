@@ -24,9 +24,9 @@ const DashboardUsers = () => {
   const [viewUser, setViewUser] = useState<User | null>(null);
   const [editUser, setEditUser] = useState<User | null>(null);
   const [deleteUser, setDeleteUser] = useState<User | null>(null);
-const { data: session, status } = useSession();
-const [loading, setLoading] = useState(true);
-const [error, setError] = useState<string | null>(null);
+  const { data: session, status } = useSession();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
 
   const [pagination, setPagination] = useState({
@@ -38,51 +38,53 @@ const [error, setError] = useState<string | null>(null);
 
 
   const fetchUsers = async () => {
-  setLoading(true);
-  setError(null);
+    setLoading(true);
+    setError(null);
 
-  try {
-    const queryParams = new URLSearchParams({
-      page: String(pagination.pageIndex + 1),
-      pageSize: String(pagination.pageSize),
-    });
+    try {
+      const queryParams = new URLSearchParams({
+        page: String(pagination.pageIndex + 1),
+        pageSize: String(pagination.pageSize),
+      });
 
-    const response = await fetch(`${api_endpoints.getUsers}?${queryParams}`, {
-      headers: {
-        Authorization: `Bearer ${session?.accessToken}`,
-      },
-    });
+      const response = await fetch(`${api_endpoints.getUsers}?${queryParams}`, {
+        headers: {
+          Authorization: `Bearer ${session?.accessToken}`,
+        },
+      });
 
-    const responseBody = await response.json();
+      const responseBody = await response.json();
 
-    if (responseBody.status === "success") {
-      const users = responseBody.users.user.map((user: User) => ({
-        id: user.id,
-        fullname: user.fullname,
-        role: user.role,
-        status: user.status ?? false,
-        email: user.email,
-      }));
-      setUserData(users);
-      setTotalPages(responseBody.users.totalPages || 0);
-    } else {
-      setError(`${responseBody.error}\n${responseBody.detail}`);
-      toast.error(`${responseBody.error}\n${responseBody.detail}`);
+      if (responseBody.status === "success") {
+        const users = responseBody.users.user.map((user: User) => ({
+          id: user.id,
+          fullname: user.fullname,
+          role: user.role,
+          status: user.status ?? false,
+          email: user.email,
+        }));
+
+        console.log('users', users)
+        setUserData(users);
+        setTotalPages(responseBody.users.totalPages || 0);
+      } else {
+        setError(`${responseBody.error}\n${responseBody.detail}`);
+        toast.error(`${responseBody.error}\n${responseBody.detail}`);
+      }
+    } catch (error) {
+      setError(`Failed to fetch user data ${error}`);
+      toast.error("Something went wrong, try again.");
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    setError(`Failed to fetch user data ${error}`);
-    toast.error("Something went wrong, try again.");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
 
-useEffect(() => {
-  if (status === 'authenticated' && session?.accessToken) {
-    fetchUsers();
-  }
-}, [status, session?.accessToken, pagination.pageIndex, pagination.pageSize]);
+  useEffect(() => {
+    if (status === 'authenticated' && session?.accessToken) {
+      fetchUsers();
+    }
+  }, [status, session?.accessToken, pagination.pageIndex, pagination.pageSize]);
 
   const handleDeleteUser = async () => {
     if (deleteUser) {
@@ -126,19 +128,19 @@ useEffect(() => {
             <p className='text-sm mb-1'>View, edit, delete, users</p>
             <Separator />
           </div>
-          
+
           <div className={viewUser || editUser ? 'hidden' : ''}>
-  {loading ? (
-    <Skeleton className="w-full h-[200px]" />
-  ) : error ? (
-    <p className="text-red-500 text-center">{error}</p>
-  ) : (
-    <UserDataTable
-      columns={UserColumns(setViewUser, setEditUser, setDeleteUser)}
-      data={userData}
-    />
-  )}
-</div>
+            {loading ? (
+              <Skeleton className="w-full h-[200px]" />
+            ) : error ? (
+              <p className="text-red-500 text-center">{error}</p>
+            ) : (
+              <UserDataTable
+                columns={UserColumns(setViewUser, setEditUser, setDeleteUser)}
+                data={userData}
+              />
+            )}
+          </div>
 
 
           <div className="flex items-center justify-end space-x-2 py-4">

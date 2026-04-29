@@ -40,7 +40,18 @@ const DashboardTiles = () => {
         },
       });
 
-      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+
+      const text = await res.text();
+
+      if (!text) {
+        throw new Error('Empty response from server');
+      }
+
+      const data = JSON.parse(text);
+
       console.log('Dashboard data:', data);
 
       if (data.status === 'success') {

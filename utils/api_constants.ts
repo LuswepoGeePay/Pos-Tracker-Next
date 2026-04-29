@@ -43,8 +43,6 @@ export const api_endpoints = {
     getEvents: `${base_url}/dashboard/events/get`,
     getLocations: `${base_url}/locations/get`,
     getUserInfo: `${base_url}/user/get/`,
-    getTestimoniesPortal: `${base_url}/get-testimonies-portal`,
-    getStreams: `${base_url}/get-streams`,
     getUsers: `${base_url}/users/get`,
     getDashboardCardInfo: `${base_url}/dashboard/info`,
     getDashboardActivity: `${base_url}/dashboard/activity`,
