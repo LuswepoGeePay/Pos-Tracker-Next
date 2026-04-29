@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -21,6 +21,7 @@ import toast from 'react-hot-toast'
 import { useSession } from 'next-auth/react'
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 const CreateAppVersionSchema = z.object({
     name: z.string(),
@@ -33,12 +34,39 @@ const CreateAppVersionSchema = z.object({
     apk: z.instanceof(File).optional().refine((file) => {
         return !file || (file && file.size <= 200 * 1024 * 1024);
     }, "File must be under 200mb"),
+    terminalTypeId: z.string(),
 })
 
 const CreateAppVersionForm = ({ appid }: { appid: string }) => {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
     const { data: session } = useSession()
+
+    const [terminalTypes, setTerminalTypes] = useState<{ id: string, name: string, terminal_model: string }[]>([]);
+
+    const getTerminalTypes = async () => {
+        try {
+            const response = await fetch(api_endpoints.getTerminalTypes, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${session?.accessToken}`,
+                },
+            })
+            const data = await response.json()
+            console.log("Terminal Types: ", data.data)
+
+            if (data.status === "success") {
+                setTerminalTypes(data.data.terminal_types)
+            }
+        } catch (error) {
+            console.log('error', error)
+        }
+    }
+
+    useEffect(() => {
+        getTerminalTypes()
+    }, [])
 
     const form = useForm<z.infer<typeof CreateAppVersionSchema>>({
         resolver: zodResolver(CreateAppVersionSchema),
@@ -50,6 +78,7 @@ const CreateAppVersionForm = ({ appid }: { appid: string }) => {
             releaseNotes: "",
             fileSize: "",
             isLastestStable: false, // Default to false
+            terminalTypeId: "",
         },
     })
 
@@ -66,6 +95,7 @@ const CreateAppVersionForm = ({ appid }: { appid: string }) => {
                 release_notes: values.releaseNotes,
                 file_size_bytes: values.fileSize,
                 is_latest_stable: values.isLastestStable,
+                terminal_type_id: values.terminalTypeId,
             }
 
             formData.append("version", JSON.stringify(appData))
@@ -115,6 +145,31 @@ const CreateAppVersionForm = ({ appid }: { appid: string }) => {
                     onSubmit={form.handleSubmit(onSubmit)}
                     className="grid grid-cols-1 md:grid-cols-2 gap-3"
                 >
+                    <FormField
+                        control={form.control}
+                        name="terminalTypeId"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Terminal Type</FormLabel>
+                                <FormControl>
+                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <SelectTrigger className="w-full">
+                                            <SelectValue placeholder="Select Terminal Type" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+
+                                            {terminalTypes && terminalTypes.map((type) => (
+                                                <SelectItem key={type.id} value={type.id}>
+                                                    {type.name}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
                     <FormField
                         control={form.control}
                         name="name"

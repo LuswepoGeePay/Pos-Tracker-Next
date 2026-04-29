@@ -1,5 +1,5 @@
 "use client"
-import {  AppVersion } from '@/utils/types/Apps'
+import { AppVersion } from '@/utils/types/Apps'
 import { useSession } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -20,9 +20,9 @@ const AppVersionsPage = () => {
   const [appData, setAppData] = useState<AppVersion[]>([])
   const [viewApp, setViewApp] = useState<AppVersion | null>(null);
   const [editApp, setEditApp] = useState<AppVersion | null>(null);
-  const [deleteApp, setDeleteApp] = useState<AppVersion | null>(null);
+  const [deleteAppVersion, setDeleteAppVersion] = useState<AppVersion | null>(null);
   const { data: session, status } = useSession();
-    const [count, setCount] = useState<number | null>(0);
+  const [count, setCount] = useState<number | null>(0);
 
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -64,12 +64,12 @@ const AppVersionsPage = () => {
           released_at: format(app.released_at, "MMMM dd yyyy"),
           file_path: app.file_path,
           name: app.app_name,
-          is_active:app.is_active ?? false,
-          app_name:app.app_name,
+          is_active: app.is_active ?? false,
+          app_name: app.app_name,
         }))
         setAppData(apps);
         setTotalPages(responseBody.apps.totalPages || 0);
-                setCount(responseBody.apps.count || 0);
+        setCount(responseBody.apps.count || 0);
 
 
       } // Set the fetched data
@@ -91,10 +91,10 @@ const AppVersionsPage = () => {
     }
   }, [status, session?.accessToken, pagination.pageIndex, pagination.pageSize]);
 
-  const handleDeleteApp = async () => {
-    if (deleteApp) {
+  const handleDeleteAppVersion = async () => {
+    if (deleteAppVersion) {
       try {
-        const response = await fetch(`${api_endpoints.deleteApp}/${deleteApp.version_id}`, {
+        const response = await fetch(`${api_endpoints.deleteAppVersion}/${deleteAppVersion.version_id}`, {
           method: "DELETE",
           headers: {
             "Authorization": `Bearer ${session?.accessToken}`
@@ -115,7 +115,7 @@ const AppVersionsPage = () => {
       catch (error) {
         toast.error(`Something went wrong, please try again`);
       } finally {
-        setDeleteApp(null);
+        setDeleteAppVersion(null);
       }
     }
   };
@@ -127,7 +127,7 @@ const AppVersionsPage = () => {
 
       <Card className='w-[340px] md:w-full my-20'>
 
-      
+
 
         <CardContent className='p-8'>
           <div className='mb-10'>
@@ -135,7 +135,7 @@ const AppVersionsPage = () => {
             <p className='text-sm mb-1'>View, edit, delete, existing Application Versions</p>
             <Separator />
           </div>
-           <div className='flex justify-between'>
+          <div className='flex justify-between'>
             <div>
 
             </div>
@@ -148,7 +148,7 @@ const AppVersionsPage = () => {
 
           <div className={viewApp || editApp ? 'hidden ' : ''}>
             <VersionDataTable
-              columns={VersionColumns(setViewApp, setEditApp, setDeleteApp)}
+              columns={VersionColumns(setViewApp, setEditApp, setDeleteAppVersion)}
               data={appData} />
 
           </div>
@@ -192,7 +192,7 @@ const AppVersionsPage = () => {
             onClose={() => setEditApp(null)}
           />
 
-          <Dialog open={!!deleteApp} onOpenChange={(open) => !open && setDeleteApp(null)}>
+          <Dialog open={!!deleteAppVersion} onOpenChange={(open) => !open && setDeleteAppVersion(null)}>
             <DialogContent className='w-[350px] md:w-[800px] rounded-lg'>
               <DialogHeader>
                 <DialogTitle>Confirm Deletion</DialogTitle>
@@ -201,8 +201,8 @@ const AppVersionsPage = () => {
                 Are you sure you want to delete this App? This action cannot be undone.
               </p>
               <DialogFooter>
-                <Button variant="outline" onClick={() => setDeleteApp(null)}>Cancel</Button>
-                <Button variant="destructive" onClick={handleDeleteApp}>Delete</Button>
+                <Button variant="outline" onClick={() => setDeleteAppVersion(null)}>Cancel</Button>
+                <Button variant="destructive" onClick={handleDeleteAppVersion}>Delete</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>

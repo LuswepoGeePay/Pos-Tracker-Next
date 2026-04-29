@@ -46,7 +46,7 @@ export const api_endpoints = {
     getUsers: `${base_url}/users/get`,
     getDashboardCardInfo: `${base_url}/dashboard/info`,
     getDashboardActivity: `${base_url}/dashboard/activity`,
-    getDashboardPodcasts: `${base_url}/dashboard/podcasts`,
+    getTerminalTypes: `${base_url}/terminal-types/get`,
 
 
     //Update
@@ -65,17 +65,8 @@ export const api_endpoints = {
     incrementPodcast: `${base_url}/podcast/increment`,
 
     //delete
-    deleteTeamMember: `${base_url}/delete-member`,
     deleteUser: `${base_url}/delete-user`,
-    deleteSermon: `${base_url}/delete-sermon`,
-    deleteSeries: `${base_url}/delete-series`,
-    deleteDepartment: `${base_url}/delete-department`,
-    deleteEvent: `${base_url}/delete-event`,
-    deleteMessage: `${base_url}/delete-message`,
-    deleteTestimony: `${base_url}/delete-testimony`,
     deleteApp: `${base_url}/app`,
-    deleteLocation: `${base_url}/location/delete`,
-    deleteBusiness: `${base_url}/delete-podcast`,
-    deleteAppVersion: `${base_url}/delete-stream`,
+    deleteAppVersion: `${base_url}/app/version`,
     deletePosDevice: `${base_url}/pos/device`,
 };
