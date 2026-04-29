@@ -5,10 +5,10 @@
 
 //production
 
-export const base_url = "https://api.postracker.mygeepay.com/v1";
-export const login_url = "https://api.postracker.mygeepay.com/v1";
-export const domain_name = "pos-tracker.geepay.tech"
-export const metaDataUrl = "https://pos-tracker.geepay.tech";
+export const base_url = "https://pos-tracker.geepay.tech/v1";
+export const login_url = "https://pos-tracker.geepay.tech/v1";
+export const domain_name = "postracker.mygeepay.com"
+export const metaDataUrl = "https://postracker.mygeepay.com";
 
 export const api_endpoints = {
     //auth
@@ -55,14 +55,7 @@ export const api_endpoints = {
     editAppVersion: `${base_url}/app/version/update`,
     editUser: `${base_url}/user/update`,
     editBusiness: `${base_url}/business/update`,
-    editEvent: `${base_url}/edit-event`,
-    updateTestimony: `${base_url}/update-testimony`,
-    editPodcast: `${base_url}/edit-podcast`,
     editApp: `${base_url}/app/info/update`,
-    editZone: `${base_url}/edit-zone`,
-    editLive: `${base_url}/edit-stream`,
-    editDiary: `${base_url}/edit-diary`,
-    incrementPodcast: `${base_url}/podcast/increment`,
 
     //delete
     deleteUser: `${base_url}/delete-user`,
