@@ -69,4 +69,7 @@ export const api_endpoints = {
     deleteApp: `${base_url}/app`,
     deleteAppVersion: `${base_url}/app/version`,
     deletePosDevice: `${base_url}/pos/device`,
+    deleteTerminalType: `${base_url}/terminal-type`,
+    deleteBusiness: `${base_url}/business`,
+    deleteLocation: `${base_url}/location`
 };
