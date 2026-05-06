@@ -33,8 +33,8 @@ const PosDeviceSchema = z.object({
     operating_system: z.string().optional(),
     description: z.string().optional(),
     business_name: z.string().optional(),
-    number1:z.string().optional(),
-    number2:z.string().optional(),
+    number1: z.string().optional(),
+    number2: z.string().optional(),
 })
 
 
@@ -45,7 +45,7 @@ interface EditPosDeviceFormProps {
 }
 
 const EditPosDeviceForm: React.FC<EditPosDeviceFormProps> = ({ pos }) => {
-   
+
     const [loading, setLoading] = useState(false)
     const { data: session } = useSession()
 
@@ -63,28 +63,28 @@ const EditPosDeviceForm: React.FC<EditPosDeviceFormProps> = ({ pos }) => {
             operating_system: pos?.operating_system,
             description: pos?.description,
             business_name: pos?.business_name,
-            number1:pos?.phone_number1,
-            number2:pos?.phone_number2
+            number1: pos?.primary_number,
+            number2: pos?.secondary_number
         }
     })
     const onSubmit = async (values: z.infer<typeof PosDeviceSchema>) => {
         try {
             setLoading(true)
             const body = {
-            last_known_longitude: values.last_known_longitude,
-            serial_number: values.serial_number,
-            name: values.name,
-            current_app_version: values.current_app_version,
-            last_known_latitude: values.last_known_latitude,
-            id: pos?.id,
-            status: values.status,
-            device_model: values.device_model,
-            operating_system: values.operating_system,
-            description: values.description,
-            business_name: values.business_name,
-            phone_number1:values.number1,
-            phone_number2: values.number2
-         }
+                last_known_longitude: values.last_known_longitude,
+                serial_number: values.serial_number,
+                name: values.name,
+                current_app_version: values.current_app_version,
+                last_known_latitude: values.last_known_latitude,
+                id: pos?.id,
+                status: values.status,
+                device_model: values.device_model,
+                operating_system: values.operating_system,
+                description: values.description,
+                business_name: values.business_name,
+                phone_number1: values.number1,
+                phone_number2: values.number2
+            }
 
 
             const response = await fetch(api_endpoints.editPosDevice, {
@@ -100,8 +100,8 @@ const EditPosDeviceForm: React.FC<EditPosDeviceFormProps> = ({ pos }) => {
 
             if (result.status === 'success') {
                 toast.success("Device updated successfully created!")
-                     window.location.reload()   
-  
+                window.location.reload()
+
             } else if (result.status === "failure") {
                 toast.error(result.error)
             } else {
@@ -173,10 +173,10 @@ const EditPosDeviceForm: React.FC<EditPosDeviceFormProps> = ({ pos }) => {
                             <FormItem>
                                 <FormLabel>Current App Version</FormLabel>
                                 <FormControl>
-                                    <Input 
-                                    type="text" 
-                                
-                                    placeholder="" {...field} />
+                                    <Input
+                                        type="text"
+
+                                        placeholder="" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -190,8 +190,8 @@ const EditPosDeviceForm: React.FC<EditPosDeviceFormProps> = ({ pos }) => {
                                 <FormLabel>Phone Number 1</FormLabel>
                                 <FormControl>
                                     <Input
-                                         type="number" 
-                                         placeholder="" {...field} />
+                                        type="number"
+                                        placeholder="" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -205,8 +205,8 @@ const EditPosDeviceForm: React.FC<EditPosDeviceFormProps> = ({ pos }) => {
                                 <FormLabel>Phone Number 2</FormLabel>
                                 <FormControl>
                                     <Input
-                                         type="number" 
-                                         placeholder="" {...field} />
+                                        type="number"
+                                        placeholder="" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -219,9 +219,9 @@ const EditPosDeviceForm: React.FC<EditPosDeviceFormProps> = ({ pos }) => {
                             <FormItem>
                                 <FormLabel>Last known Latitude</FormLabel>
                                 <FormControl>
-                                    <Input type="text" 
-                                    disabled
-                                    placeholder="" {...field} />
+                                    <Input type="text"
+                                        disabled
+                                        placeholder="" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -236,14 +236,14 @@ const EditPosDeviceForm: React.FC<EditPosDeviceFormProps> = ({ pos }) => {
                                 <FormControl>
                                     <Input
                                         disabled
-                                         type="text" 
-                                         placeholder="" {...field} />
+                                        type="text"
+                                        placeholder="" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
-                     <FormField
+                    <FormField
                         control={form.control}
                         name="status"
                         render={({ field }) => (
@@ -256,8 +256,8 @@ const EditPosDeviceForm: React.FC<EditPosDeviceFormProps> = ({ pos }) => {
                             </FormItem>
                         )}
                     />
-                    
-                      <FormField
+
+                    <FormField
                         control={form.control}
                         name="status"
                         render={({ field }) => (
@@ -270,8 +270,8 @@ const EditPosDeviceForm: React.FC<EditPosDeviceFormProps> = ({ pos }) => {
                             </FormItem>
                         )}
                     />
-                    
-                      <FormField
+
+                    <FormField
                         control={form.control}
                         name="status"
                         render={({ field }) => (
@@ -284,8 +284,8 @@ const EditPosDeviceForm: React.FC<EditPosDeviceFormProps> = ({ pos }) => {
                             </FormItem>
                         )}
                     />
-                    
-                      <FormField
+
+                    <FormField
                         control={form.control}
                         name="description"
                         render={({ field }) => (
@@ -293,16 +293,16 @@ const EditPosDeviceForm: React.FC<EditPosDeviceFormProps> = ({ pos }) => {
                                 <FormLabel>Description</FormLabel>
                                 <FormControl>
                                     <Textarea
-                                    className='min-h-[120px]'
-                                    placeholder="" {...field} />
+                                        className='min-h-[120px]'
+                                        placeholder="" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
-                      
-                    
-                    
+
+
+
                     <Button
                         type="submit"
                         disabled={loading}
@@ -320,7 +320,7 @@ const EditPosDeviceForm: React.FC<EditPosDeviceFormProps> = ({ pos }) => {
             </Form>
         </div>
     )
-   
+
 }
 
 export default EditPosDeviceForm

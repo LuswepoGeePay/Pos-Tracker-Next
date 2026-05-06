@@ -38,14 +38,14 @@ const ViewDeviceDialog: React.FC<ViewDeviceDialogProps> = ({ pos, open, onClose 
             <p>{pos.current_app_version}</p>
           </div>
 
- <div>
-            <p className="font-semibold text-lg">Phone Number 1</p>
-            <p>{pos.phone_number1}</p>
+          <div>
+            <p className="font-semibold text-lg">Primary Number</p>
+            <p>{pos.primary_number}</p>
           </div>
 
- <div>
-            <p className="font-semibold text-lg">Pjone Number 2</p>
-            <p>{pos.phone_number2}</p>
+          <div>
+            <p className="font-semibold text-lg">Secondary Number</p>
+            <p>{pos.secondary_number}</p>
           </div>
 
           <div>
@@ -53,7 +53,7 @@ const ViewDeviceDialog: React.FC<ViewDeviceDialogProps> = ({ pos, open, onClose 
             <p>{pos.operating_system}</p>
           </div>
 
-          
+
         </div>
         <DialogFooter>
           <Button
