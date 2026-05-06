@@ -14,31 +14,31 @@ type UserActionsProps = {
     onEdit: (PosDevice: PosDevice) => void;
     onDelete: (PosDevice: PosDevice) => void;
     onViewMap: (PosDevice: PosDevice) => void;
-  
+
 };
 
 
 
 const UserActions: React.FC<UserActionsProps> = ({ row, onView, onViewMap, onEdit, onDelete }) => {
-    
+
     return (
         <>
             <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0">
-                    <span className="sr-only">Open menu</span>
-                    <MoreHorizontal className="h-4 w-4" />
-                </Button>
-            </DropdownMenuTrigger>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="h-8 w-8 p-0">
+                        <span className="sr-only">Open menu</span>
+                        <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                     <DropdownMenuItem onClick={() => onViewMap(row)}>View on Map</DropdownMenuItem>
-    
+                    <DropdownMenuItem onClick={() => onViewMap(row)}>View on Map</DropdownMenuItem>
+
                     <DropdownMenuItem onClick={() => onView(row)}>View</DropdownMenuItem>
                     <DropdownMenuItem onClick={() => onEdit(row)}>Edit</DropdownMenuItem>
                     <DropdownMenuItem onClick={() => onDelete(row)}>Delete</DropdownMenuItem>
-                   
+
                 </DropdownMenuContent>
             </DropdownMenu>
 
@@ -51,8 +51,8 @@ const StatusCell = ({ row }: { row: Row<PosDevice> }) => {
     const status = row.original.status
     return (
         <>
-            <div className={status =="online" ? "bg-green-500 p-1 w-full max-w-lg rounded-2xl" : "bg-red-500 p-2 rounded-2xl"}>
-               <p >{status =="online" ?  <p className="text-green-100">Online</p> : <p>Offline</p> }</p>             </div>
+            <div className={status == "online" ? "bg-green-500 p-1 w-full max-w-lg rounded-2xl" : "bg-red-500 p-2 rounded-2xl"}>
+                <p >{status == "online" ? <p className="text-green-100">Online</p> : <p>Offline</p>}</p>             </div>
         </>
     )
 }
@@ -75,8 +75,8 @@ export const PosDeviceColumns = (
     setViewUser: (PosDevice: PosDevice | null) => void,
     setEditUser: (PosDevice: PosDevice | null) => void,
     onDelete: (PosDevice: PosDevice) => void,
-     onViewMap: (PosDevice: PosDevice) => void
-  
+    onViewMap: (PosDevice: PosDevice) => void
+
 ): ColumnDef<PosDevice>[] => [
         {
             accessorKey: "name",
@@ -86,7 +86,7 @@ export const PosDeviceColumns = (
                         variant="ghost"
                         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                     >
-                      Device Name
+                        Device Name
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 )
@@ -94,40 +94,40 @@ export const PosDeviceColumns = (
         },
         {
             accessorKey: "business_name",
-              header: "Entity",
+            header: "Entity",
         },
-         {
+        {
             accessorKey: "serial_number",
-              header: "Serial Number",
+            header: "Serial Number",
         },
-         {
+        {
             accessorKey: "current_app_version",
-              header: "Current app version",
+            header: "Current app version",
         },
-        
+
         {
             accessorKey: "status",
             header: "Status",
-            cell:StatusCell
+            cell: StatusCell
         },
 
-       
+
         {
-            accessorKey: "phone_number1",
-            header: "Phone Number 1",
-       
-        },
-        
-         {
-            accessorKey: "phone_number2",
-              header: "Phone Number 2",
+            accessorKey: "primary_number",
+            header: "Primary Number",
+
         },
 
-         {
-            accessorKey: "loc_last",
-              header: "Location last updated",
+        {
+            accessorKey: "secondary_number",
+            header: "Secondary Number",
         },
-        
+
+        {
+            accessorKey: "loc_last",
+            header: "Location last updated",
+        },
+
         {
             id: "Actions",
             header: "Actions",
@@ -137,8 +137,8 @@ export const PosDeviceColumns = (
                     onView={setViewUser}
                     onEdit={setEditUser}
                     onDelete={onDelete}
-                      onViewMap={onViewMap}
-                 
+                    onViewMap={onViewMap}
+
                 />
             ),
         }

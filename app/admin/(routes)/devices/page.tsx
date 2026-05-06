@@ -104,6 +104,7 @@ const AllPosDevicesPage = () => {
     });
 
     const responseBody = await response.json();
+    console.log('first', responseBody)
     if (responseBody["status"] === "success") {
       setLoading(false)
       if (responseBody?.devices?.posdevice) {
@@ -121,8 +122,8 @@ const AllPosDevicesPage = () => {
           name: posDevice.name,
           business_name: posDevice.business_name,
           fingerprint: posDevice.fingerprint,
-          phone_number1: posDevice.phone_number1,
-          phone_number2: posDevice.phone_number2
+          primary_number: posDevice.primary_number,
+          secondary_number: posDevice.secondary_number
         }))
         setPosDeviceData(posDevices);
         setTotalPages(responseBody.devices.totalPages || 0);
