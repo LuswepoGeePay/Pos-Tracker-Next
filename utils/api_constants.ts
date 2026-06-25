@@ -5,8 +5,8 @@
 
 //production
 
-export const base_url = "https://pos-tracker.geepay.tech/v1";
-export const login_url = "https://pos-tracker.geepay.tech/v1";
+export const base_url = "https://api.postracker.mygeepay.com/v1";
+export const login_url = "https://api.postracker.mygeepay.com/v1";
 export const domain_name = "postracker.mygeepay.com"
 export const metaDataUrl = "https://postracker.mygeepay.com";
 
